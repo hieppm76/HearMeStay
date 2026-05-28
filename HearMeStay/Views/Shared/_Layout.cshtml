@@ -1,49 +1,81 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="vi">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - HearMeStay</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/HearMeStay.styles.css" asp-append-version="true" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] – HearMeStay</title>
+    <meta name="description" content="@(ViewData["Description"] ?? "HearMeStay – Nền tảng đặt phòng cá nhân hóa bằng AI. Hiểu bạn trước khi bạn đến.")"/>
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true"/>
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HearMeStay</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - HearMeStay - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+<!-- NAVBAR -->
+<nav class="navbar" id="mainNav">
+    <a asp-controller="Home" asp-action="Index" class="nav-logo">
+        <div class="nav-logo-icon">🏨</div>
+        <span class="nav-logo-text">HearMeStay</span>
+    </a>
+    <ul class="nav-links">
+        <li><a asp-controller="Hotel" asp-action="Search">Tìm phòng</a></li>
+        <li><a href="#how-it-works">Cách hoạt động</a></li>
+        <li><a href="#features">Tính năng</a></li>
+        <li><a href="#testimonials">Đánh giá</a></li>
+    </ul>
+    <div class="nav-actions">
+        <a href="#" class="btn btn-outline">Đăng nhập</a>
+        <a asp-controller="Hotel" asp-action="Search" class="btn btn-primary">Đặt phòng ngay</a>
+    </div>
+</nav>
+
+@RenderBody()
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <a asp-controller="Home" asp-action="Index" class="nav-logo" style="margin-bottom:12px;display:inline-flex;">
+                <div class="nav-logo-icon">🏨</div>
+                <span class="nav-logo-text" style="color:white;">HearMeStay</span>
+            </a>
+            <p>Nền tảng đặt phòng cá nhân hóa bằng AI. Hiểu bạn trước khi bạn đến.</p>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+        <div class="footer-col">
+            <h4>Dịch vụ</h4>
+            <ul>
+                <li><a asp-controller="Hotel" asp-action="Search">Tìm phòng</a></li>
+                <li><a href="#">Khách sạn</a></li>
+                <li><a href="#">Homestay</a></li>
+                <li><a href="#">Villa &amp; Resort</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Tính năng</h4>
+            <ul>
+                <li><a asp-controller="Preference" asp-action="Form">AI Preference Form</a></li>
+                <li><a href="#">AI Match Score</a></li>
+                <li><a href="#">Guest Insight</a></li>
+                <li><a href="#">Dịch vụ upsell</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Đối tác</h4>
+            <ul>
+                <li><a href="#">Đăng ký đối tác</a></li>
+                <li><a href="#">Hotel Dashboard</a></li>
+                <li><a href="#">Liên hệ</a></li>
+                <li><a href="#">Về chúng tôi</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; @DateTime.Now.Year HearMeStay. All rights reserved.</p>
+        <p>🇻🇳 Made in Vietnam with ❤️</p>
+    </div>
+</footer>
+
+<script src="~/js/main.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
