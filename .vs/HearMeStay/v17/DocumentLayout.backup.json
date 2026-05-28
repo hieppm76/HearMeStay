@@ -1,7 +1,12 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\MyPC\\OneDrive\\VisualStudio\\HearMeStay\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\MyPC\\OneDrive\\M\u00E1y t\u00EDnh\\HearMeStay\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{D1D9F3F2-494C-4060-953E-618F47755D91}|HearMeStay\\HearMeStay.csproj|c:\\users\\mypc\\onedrive\\m\u00E1y t\u00EDnh\\hearmestay\\hearmestay\\hearmestay.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{D1D9F3F2-494C-4060-953E-618F47755D91}|HearMeStay\\HearMeStay.csproj|solutionrelative:hearmestay\\hearmestay.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +14,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 199,
           "Children": [
             {
               "$type": "Bookmark",
@@ -806,6 +811,19 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "HearMeStay.csproj",
+              "DocumentMoniker": "C:\\Users\\MyPC\\OneDrive\\M\u00E1y t\u00EDnh\\HearMeStay\\HearMeStay\\HearMeStay.csproj",
+              "RelativeDocumentMoniker": "HearMeStay\\HearMeStay.csproj",
+              "ToolTip": "C:\\Users\\MyPC\\OneDrive\\M\u00E1y t\u00EDnh\\HearMeStay\\HearMeStay\\HearMeStay.csproj",
+              "RelativeToolTip": "HearMeStay\\HearMeStay.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-28T07:31:02.14Z",
+              "EditorCaption": ""
             }
           ]
         },

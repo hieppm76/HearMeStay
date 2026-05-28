@@ -1,8 +1,276 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Understanding You Before You Arrive";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    .navbar.scrolled { box-shadow: 0 4px 20px rgba(0,119,182,0.15); }
+    .hero-wave { position: absolute; bottom: -2px; left: 0; width: 100%; }
+    .card-img-wrap { position: relative; }
+    .popular-tag { position: absolute; top: 12px; left: 12px; background: white; color: var(--primary); font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 50px; }
+    .how-section { background: var(--bg); }
+    .partner-strip { background: white; padding: 40px 5%; text-align: center; border-bottom: 1px solid var(--gray-light); }
+    .partner-strip p { color: var(--gray); font-size: 0.85rem; margin-bottom: 24px; font-weight: 500; }
+    .partner-logos { display: flex; gap: 40px; align-items: center; justify-content: center; flex-wrap: wrap; }
+    .partner-logo { font-size: 1.2rem; font-weight: 800; color: var(--gray-light); letter-spacing: -0.5px; transition: color 0.2s; }
+    .partner-logo:hover { color: var(--primary); }
+    .hero-tags { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+    .hero-tag { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.9); padding: 6px 16px; border-radius: 50px; font-size: 0.8rem; }
+</style>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content fade-in">
+        <div class="hero-badge">✨ AI-Powered Personalization</div>
+        <h1>Understanding You<br/><span>Before You Arrive</span></h1>
+        <p>Không chỉ đặt phòng – HearMeStay giúp nơi lưu trú hiểu bạn trước khi bạn đến. Chia sẻ nhu cầu, AI phân tích, khách sạn chuẩn bị.</p>
+
+        <div class="search-box">
+            <form asp-controller="Hotel" asp-action="Search" method="get">
+                <div class="search-grid">
+                    <div class="search-field">
+                        <label>📍 Điểm đến</label>
+                        <input type="text" name="destination" placeholder="Hà Nội, Đà Nẵng, Phú Quốc..."/>
+                    </div>
+                    <div class="search-field">
+                        <label>📅 Check-in</label>
+                        <input type="date" name="checkin"/>
+                    </div>
+                    <div class="search-field">
+                        <label>📅 Check-out</label>
+                        <input type="date" name="checkout"/>
+                    </div>
+                    <div class="search-field">
+                        <button type="submit" class="btn btn-primary btn-lg" style="width:100%;border-radius:12px;">🔍 Tìm</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="hero-tags">
+            <span class="hero-tag">🥗 Ăn chay</span>
+            <span class="hero-tag">💑 Kỷ niệm</span>
+            <span class="hero-tag">👶 Gia đình</span>
+            <span class="hero-tag">🤧 Dị ứng</span>
+            <span class="hero-tag">💼 Công tác</span>
+            <span class="hero-tag">🧘 Nghỉ dưỡng</span>
+        </div>
+    </div>
+    <svg class="hero-wave" viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#F0F9FF"/>
+    </svg>
+</section>
+
+<!-- PARTNER STRIP -->
+<div class="partner-strip">
+    <p>Hơn 500+ đối tác khách sạn tin tưởng</p>
+    <div class="partner-logos">
+        <span class="partner-logo">Vinpearl</span>
+        <span class="partner-logo">Novotel</span>
+        <span class="partner-logo">Mường Thanh</span>
+        <span class="partner-logo">La Siesta</span>
+        <span class="partner-logo">Fusion</span>
+        <span class="partner-logo">Almanity</span>
+    </div>
 </div>
+
+<!-- STATS -->
+<div class="stats-bar">
+    <div><div class="stat-num">500+</div><div class="stat-label">Đối tác khách sạn</div></div>
+    <div><div class="stat-num">12K+</div><div class="stat-label">Lượt đặt phòng</div></div>
+    <div><div class="stat-num">98%</div><div class="stat-label">Khách hài lòng</div></div>
+    <div><div class="stat-num">45+</div><div class="stat-label">Tỉnh thành</div></div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="section how-section" id="how-it-works">
+    <div class="section-center">
+        <div class="section-label">Quy trình</div>
+        <h2>Cách <span>HearMeStay</span> hoạt động</h2>
+        <div class="divider"></div>
+        <p class="subtitle">6 bước đơn giản – từ đặt phòng đến trải nghiệm cá nhân hóa hoàn hảo</p>
+    </div>
+    <div class="steps">
+        <div class="step-card"><div class="step-num">🏨</div><h3>1. Hotel Onboarding</h3><p>Khách sạn đăng ký, cập nhật thông tin phòng, giá, tiện ích và các dịch vụ cộng thêm lên hệ thống.</p></div>
+        <div class="step-card"><div class="step-num">🔍</div><h3>2. Smart Booking</h3><p>Người dùng tìm kiếm theo địa điểm, giá, tiện ích và đặc biệt là nhu cầu cá nhân. Đặt phòng chỉ vài bước.</p></div>
+        <div class="step-card"><div class="step-num">📝</div><h3>3. AI Preference Collection</h3><p>Sau khi đặt phòng, khách điền sở thích cá nhân: dị ứng, chế độ ăn, mục đích chuyến đi, yêu cầu đặc biệt.</p></div>
+        <div class="step-card"><div class="step-num">🤖</div><h3>4. AI Insight Processing</h3><p>AI phân tích thông tin và tạo action tags rõ ràng gửi đến từng bộ phận của khách sạn.</p></div>
+        <div class="step-card"><div class="step-num">🛎️</div><h3>5. Hotel Preparation</h3><p>Khách sạn nhận dashboard và chuẩn bị phòng, món ăn, dịch vụ phù hợp trước khi khách check-in.</p></div>
+        <div class="step-card"><div class="step-num">⭐</div><h3>6. Personalized Stay & Feedback</h3><p>Khách đến và cảm nhận sự khác biệt. Sau lưu trú, hệ thống thu thập feedback để cải thiện AI.</p></div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+    <div class="section-center" style="color:white;">
+        <div class="ai-badge">🤖 Powered by AI</div>
+        <h2 style="color:white;">Điểm khác biệt của <span style="color:var(--accent);">HearMeStay</span></h2>
+        <div class="divider"></div>
+        <p style="color:rgba(255,255,255,0.8);">Không chỉ đặt phòng – chúng tôi mang đến trải nghiệm được cá nhân hóa thực sự</p>
+    </div>
+    <div class="features-grid">
+        <div class="feature-card"><div class="feature-icon">🧠</div><h3>AI phân tích nhu cầu</h3><p>AI đọc hiểu câu văn tự do, phân loại nhu cầu thành các tag như Allergy, Special Occasion, Room Preference...</p></div>
+        <div class="feature-card"><div class="feature-icon">🎯</div><h3>AI Match Score</h3><p>Xem % phù hợp giữa khách sạn và nhu cầu của bạn. Tìm được nơi lưu trú đúng nhất.</p></div>
+        <div class="feature-card"><div class="feature-icon">🔔</div><h3>Bộ lọc cá nhân hóa</h3><p>Lọc theo ăn chay, dị ứng, phù hợp cặp đôi, gia đình, người lớn tuổi, không gian chữa lành...</p></div>
+        <div class="feature-card"><div class="feature-icon">📊</div><h3>Guest Insight Dashboard</h3><p>Khách sạn thấy rõ từng nhu cầu, từng bộ phận biết việc cần làm. Không còn hiểu nhầm.</p></div>
+        <div class="feature-card"><div class="feature-icon">💎</div><h3>Gợi ý upsell thông minh</h3><p>AI gợi ý dịch vụ phù hợp: trang trí kỷ niệm, spa, private dinner, tour địa phương.</p></div>
+        <div class="feature-card"><div class="feature-icon">🔒</div><h3>Bảo mật dữ liệu</h3><p>Thông tin cá nhân được mã hóa và chỉ chia sẻ với nơi lưu trú bạn đặt phòng.</p></div>
+    </div>
+</section>
+
+<!-- POPULAR DESTINATIONS -->
+<section class="section" id="destinations">
+    <div class="section-center">
+        <div class="section-label">Khám phá</div>
+        <h2>Điểm đến <span>nổi bật</span></h2>
+        <div class="divider"></div>
+        <p class="subtitle">Hàng nghìn lựa chọn lưu trú trên khắp Việt Nam</p>
+    </div>
+    <div class="grid-4">
+        <div class="card">
+            <div class="card-img-wrap">
+                <img class="card-img" src="https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?w=500&q=80" alt="Đà Nẵng"/>
+                <span class="popular-tag">🔥 Hot</span>
+            </div>
+            <div class="card-body">
+                <span class="card-tag">Resort</span>
+                <div class="card-title">Fusion Maia Đà Nẵng</div>
+                <div class="card-location">📍 Bãi biển Mỹ Khê, Đà Nẵng</div>
+                <div class="card-footer">
+                    <div class="card-price">1.850.000 <span>đ/đêm</span></div>
+                    <div class="rating"><span class="star">★</span> 4.9 (312)</div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-img-wrap">
+                <img class="card-img" src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=500&q=80" alt="Phú Quốc"/>
+                <span class="popular-tag">🌊 Biển đẹp</span>
+            </div>
+            <div class="card-body">
+                <span class="card-tag">Villa</span>
+                <div class="card-title">Ocean Villa Phú Quốc</div>
+                <div class="card-location">📍 Bãi Trường, Phú Quốc</div>
+                <div class="card-footer">
+                    <div class="card-price">2.400.000 <span>đ/đêm</span></div>
+                    <div class="rating"><span class="star">★</span> 4.8 (189)</div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-img-wrap">
+                <img class="card-img" src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=500&q=80" alt="Hội An"/>
+                <span class="popular-tag">🏆 Top rated</span>
+            </div>
+            <div class="card-body">
+                <span class="card-tag">Boutique Hotel</span>
+                <div class="card-title">La Siesta Hội An</div>
+                <div class="card-location">📍 Phố cổ Hội An, Quảng Nam</div>
+                <div class="card-footer">
+                    <div class="card-price">980.000 <span>đ/đêm</span></div>
+                    <div class="rating"><span class="star">★</span> 4.9 (427)</div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-img-wrap">
+                <img class="card-img" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&q=80" alt="Hà Nội"/>
+            </div>
+            <div class="card-body">
+                <span class="card-tag">Khách sạn 5★</span>
+                <div class="card-title">Sofitel Legend Metropole</div>
+                <div class="card-location">📍 Hoàn Kiếm, Hà Nội</div>
+                <div class="card-footer">
+                    <div class="card-price">4.200.000 <span>đ/đêm</span></div>
+                    <div class="rating"><span class="star">★</span> 4.9 (856)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="text-align:center;margin-top:40px;">
+        <a asp-controller="Hotel" asp-action="Search" class="btn btn-primary btn-lg">Xem tất cả khách sạn →</a>
+    </div>
+</section>
+
+<!-- AI PREFERENCE HIGHLIGHT -->
+<section class="section bg-light" style="padding:80px 5%;">
+    <div class="grid-2" style="align-items:center;gap:60px;">
+        <div>
+            <div class="section-label">Tính năng độc đáo</div>
+            <h2 style="font-size:2rem;font-weight:800;color:var(--navy);margin-bottom:16px;">Chia sẻ nhu cầu –<br/><span class="text-gradient">Khách sạn chuẩn bị</span></h2>
+            <p style="color:var(--gray);margin-bottom:28px;line-height:1.8;">Chỉ cần viết một câu, AI sẽ phân tích và gửi đúng thông tin đến đúng bộ phận. Bạn không cần nhắc lại khi đến nơi.</p>
+            <div style="background:white;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin-bottom:28px;">
+                <div style="font-size:0.82rem;color:var(--gray);margin-bottom:10px;">Khách nhập:</div>
+                <div style="font-style:italic;color:var(--navy);font-size:0.95rem;margin-bottom:16px;">"Bạn gái mình dị ứng hải sản, tụi mình đi kỷ niệm 2 năm, muốn phòng yên tĩnh và không có mùi tinh dầu."</div>
+                <div style="font-size:0.82rem;color:var(--gray);margin-bottom:10px;">AI tạo tags:</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                    <span class="tag tag-allergy">🦐 Dị ứng hải sản</span>
+                    <span class="tag tag-occasion">💑 Kỷ niệm 2 năm</span>
+                    <span class="tag tag-room">🔇 Phòng yên tĩnh</span>
+                    <span class="tag tag-room">🌿 Không tinh dầu</span>
+                    <span class="tag tag-upsell">💐 Gợi ý trang trí</span>
+                </div>
+            </div>
+            <a asp-controller="Preference" asp-action="Form" class="btn btn-primary">Thử ngay AI Preference Form →</a>
+        </div>
+        <div>
+            <div style="background:var(--gradient);border-radius:var(--radius);padding:32px;color:white;">
+                <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:20px;">📊 Dashboard khách sạn nhận được</h3>
+                <div style="background:rgba(255,255,255,0.1);border-radius:var(--radius-sm);padding:16px;margin-bottom:12px;">
+                    <div style="font-size:0.8rem;opacity:0.75;margin-bottom:6px;">Khách sắp đến</div>
+                    <div style="font-weight:700;">Nguyễn Minh Anh</div>
+                    <div style="font-size:0.82rem;opacity:0.8;">Check-in: 20/06/2026 · 2 khách</div>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <div style="font-size:0.8rem;opacity:0.75;margin-bottom:8px;">AI Tags:</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                        <span style="background:rgba(255,255,255,0.2);padding:4px 10px;border-radius:50px;font-size:0.75rem;">🦐 Seafood Allergy</span>
+                        <span style="background:rgba(255,255,255,0.2);padding:4px 10px;border-radius:50px;font-size:0.75rem;">💑 Anniversary</span>
+                        <span style="background:rgba(255,255,255,0.2);padding:4px 10px;border-radius:50px;font-size:0.75rem;">🔇 Quiet Room</span>
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size:0.8rem;opacity:0.75;margin-bottom:8px;">Việc cần chuẩn bị:</div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div style="font-size:0.82rem;background:rgba(255,255,255,0.1);padding:8px 12px;border-radius:8px;">🍽️ Bếp: Tránh hải sản hoàn toàn</div>
+                        <div style="font-size:0.82rem;background:rgba(255,255,255,0.1);padding:8px 12px;border-radius:8px;">🧹 Housekeeping: Không dùng tinh dầu</div>
+                        <div style="font-size:0.82rem;background:rgba(255,255,255,0.1);padding:8px 12px;border-radius:8px;">💐 CSKH: Gợi ý gói trang trí kỷ niệm</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section" id="testimonials">
+    <div class="section-center">
+        <div class="section-label">Đánh giá</div>
+        <h2>Khách hàng nói <span>gì về chúng tôi</span></h2>
+        <div class="divider"></div>
+    </div>
+    <div class="grid-3">
+        <div class="testimonial-card">
+            <p class="testimonial-text">HearMeStay thật sự ấn tượng. Mình có dị ứng gluten, điền vào form và đến nơi bữa sáng đã có option không gluten sẵn sàng.</p>
+            <div class="testimonial-author"><div class="author-avatar">L</div><div><div class="author-name">Linh Phạm</div><div class="author-role">Khách du lịch · Hà Nội</div></div></div>
+        </div>
+        <div class="testimonial-card">
+            <p class="testimonial-text">Tụi mình đi honeymoon, chia sẻ qua form. Vào phòng đã có hoa, rượu vang và nến. Quá tuyệt!</p>
+            <div class="testimonial-author"><div class="author-avatar">M</div><div><div class="author-name">Minh &amp; Hà</div><div class="author-role">Cặp đôi · Đà Nẵng</div></div></div>
+        </div>
+        <div class="testimonial-card">
+            <p class="testimonial-text">Mình đi cùng mẹ cao tuổi, yêu cầu phòng tầng thấp. Họ tự chuẩn bị trước. Cảm ơn HearMeStay!</p>
+            <div class="testimonial-author"><div class="author-avatar">T</div><div><div class="author-name">Tuấn Anh</div><div class="author-role">Gia đình · TP.HCM</div></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+    <div class="ai-badge">🚀 Bắt đầu miễn phí</div>
+    <h2>Sẵn sàng cho chuyến đi<br/>được cá nhân hóa?</h2>
+    <p>Đăng ký miễn phí và trải nghiệm sự khác biệt của HearMeStay ngay hôm nay.</p>
+    <div class="cta-btns">
+        <a asp-controller="Hotel" asp-action="Search" class="btn btn-white btn-lg">🔍 Tìm phòng ngay</a>
+        <a href="#" class="btn btn-outline btn-lg" style="border-color:rgba(255,255,255,0.5);color:white;">Đăng ký tài khoản</a>
+    </div>
+</section>

@@ -1,0 +1,205 @@
+@{
+    ViewData["Title"] = "AI Preference Form";
+}
+
+<style>
+    .pref-page { padding-top: 70px; }
+    .pref-hero { background: var(--gradient); padding: 60px 5% 80px; text-align: center; color: white; position: relative; }
+    .pref-hero::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 60px; background: var(--bg); clip-path: ellipse(55% 100% at 50% 100%); }
+    .pref-content { padding: 40px 5%; max-width: 900px; margin: 0 auto; }
+    .pref-card { background: white; border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow); margin-bottom: 28px; }
+    .pref-card-title { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+    .pref-card-sub { font-size: 0.85rem; color: var(--gray); margin-bottom: 20px; }
+    .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+    .pref-check-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 2px solid var(--gray-light); border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s; font-size: 0.88rem; color: var(--navy); }
+    .pref-check-item:hover { border-color: var(--primary); background: var(--bg); }
+    .pref-check-item input { accent-color: var(--primary); width: 16px; height: 16px; cursor: pointer; }
+    .pref-check-item.checked { border-color: var(--primary); background: var(--bg); }
+    .tag-preview { background: var(--bg); border-radius: var(--radius-sm); padding: 16px 20px; min-height: 60px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; border: 2px dashed var(--accent); }
+    .success-msg { display: none; background: linear-gradient(135deg, #D1FAE5, #A7F3D0); border: 2px solid #059669; border-radius: var(--radius); padding: 32px; text-align: center; margin-bottom: 28px; }
+    .success-msg h2 { color: #065F46; font-size: 1.5rem; margin-bottom: 12px; }
+    .success-msg p { color: #047857; font-size: 0.9rem; }
+    .booking-confirm { background: white; border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 28px; border-left: 4px solid var(--primary); box-shadow: var(--shadow); display: flex; align-items: center; gap: 16px; }
+    .confirm-icon { font-size: 2rem; }
+    .confirm-title { font-weight: 700; color: var(--navy); font-size: 0.95rem; }
+    .confirm-sub { font-size: 0.82rem; color: var(--gray); }
+    .ai-processing { background: linear-gradient(135deg, #03045E, #0077B6); border-radius: var(--radius); padding: 28px; color: white; text-align: center; margin-top: 16px; display: none; }
+    .progress-bar { background: rgba(255,255,255,0.2); border-radius: 50px; height: 8px; margin: 16px 0; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--accent); border-radius: 50px; width: 0%; transition: width 2s ease; }
+    textarea::placeholder { color: #9CA3AF; }
+</style>
+
+<div class="pref-page">
+    <div class="pref-hero">
+        <div class="ai-badge" style="margin-bottom:20px;">🤖 AI Preference System</div>
+        <h1 style="font-size:2.2rem;font-weight:800;margin-bottom:12px;">Chia sẻ nhu cầu của bạn</h1>
+        <p style="opacity:0.9;font-size:1rem;max-width:540px;margin:0 auto;">Nơi lưu trú sẽ nhận được thông tin và chuẩn bị sẵn cho bạn trước khi đến. Bạn không cần nhắc lại bất cứ điều gì.</p>
+    </div>
+
+    <div class="pref-content">
+        @if (TempData["Success"] != null)
+        {
+            <div class="success-msg" style="display:block;">
+                <div style="font-size:3rem;margin-bottom:12px;">🎉</div>
+                <h2>@TempData["Success"]</h2>
+                <p>AI đã phân tích nhu cầu của bạn và gửi thông tin đến <strong>Fusion Maia Đà Nẵng</strong>.<br/>Khách sạn sẽ chuẩn bị mọi thứ trước khi bạn đến. Chúc bạn có chuyến đi tuyệt vời! ✈️</p>
+                <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Về trang chủ</a>
+                    <a asp-controller="Hotel" asp-action="Search" class="btn btn-outline">Tìm phòng khác</a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div id="successMsg" class="success-msg">
+                <div style="font-size:3rem;margin-bottom:12px;">🎉</div>
+                <h2>Đã gửi thành công!</h2>
+                <p>AI đã phân tích nhu cầu của bạn và gửi thông tin đến <strong>Fusion Maia Đà Nẵng</strong>.<br/>Khách sạn sẽ chuẩn bị mọi thứ trước khi bạn đến. Chúc bạn có chuyến đi tuyệt vời! ✈️</p>
+                <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Về trang chủ</a>
+                    <a asp-controller="Hotel" asp-action="Search" class="btn btn-outline">Tìm phòng khác</a>
+                </div>
+            </div>
+
+            <div class="booking-confirm">
+                <div class="confirm-icon">✅</div>
+                <div>
+                    <div class="confirm-title">Đặt phòng thành công – Fusion Maia Đà Nẵng</div>
+                    <div class="confirm-sub">Mã booking: #HMS2026-4892 · Check-in: 20/06/2026 · Check-out: 23/06/2026 · 2 khách · Garden Suite</div>
+                </div>
+            </div>
+
+            <form id="prefForm" asp-controller="Preference" asp-action="Submit" method="post">
+                <div class="pref-card">
+                    <div class="pref-card-title">🍽️ Dị ứng &amp; Chế độ ăn</div>
+                    <div class="pref-card-sub">Giúp nhà bếp và nhân viên phục vụ chuẩn bị thực đơn phù hợp cho bạn.</div>
+                    <div class="checkbox-grid">
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="allergy" data-label="🦐 Dị ứng hải sản"/> 🦐 Dị ứng hải sản</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="allergy" data-label="🥜 Dị ứng đậu phộng"/> 🥜 Dị ứng đậu phộng</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="allergy" data-label="🥛 Không dung nạp sữa"/> 🥛 Không dung nạp sữa</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="allergy" data-label="🌾 Không gluten"/> 🌾 Không gluten</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="food" data-label="🥗 Ăn chay (Vegetarian)"/> 🥗 Ăn chay (Vegetarian)</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="food" data-label="🌱 Thuần chay (Vegan)"/> 🌱 Thuần chay (Vegan)</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="food" data-label="☪️ Halal"/> ☪️ Halal</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="food" data-label="🐟 Không ăn thịt đỏ"/> 🐟 Không ăn thịt đỏ</label>
+                    </div>
+                </div>
+
+                <div class="pref-card">
+                    <div class="pref-card-title">🛏️ Thói quen &amp; Sở thích phòng</div>
+                    <div class="pref-card-sub">Giúp housekeeping và lễ tân setup phòng phù hợp nhất với bạn.</div>
+                    <div class="checkbox-grid">
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="room" data-label="🔇 Phòng yên tĩnh"/> 🔇 Phòng yên tĩnh</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="room" data-label="🌿 Không dùng tinh dầu"/> 🌿 Không dùng tinh dầu/mùi hương</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="room" data-label="❄️ Phòng mát (16-18°C)"/> ❄️ Phòng mát (16–18°C)</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="room" data-label="🌡️ Phòng ấm (22-24°C)"/> 🌡️ Phòng ấm (22–24°C)</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="room" data-label="🪟 Phòng tầng cao view đẹp"/> 🪟 Phòng tầng cao/view đẹp</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="room" data-label="🏢 Phòng tầng thấp (gần thang máy)"/> 🏢 Phòng tầng thấp</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="room" data-label="🛏️ Gối cứng"/> 🛏️ Gối cứng</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="room" data-label="🛏️ Gối mềm"/> 🛌 Gối mềm</label>
+                    </div>
+                </div>
+
+                <div class="pref-card">
+                    <div class="pref-card-title">✈️ Mục đích chuyến đi</div>
+                    <div class="pref-card-sub">AI sẽ gợi ý dịch vụ phù hợp dựa trên mục đích của bạn.</div>
+                    <div class="checkbox-grid">
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="occasion" data-label="💑 Kỷ niệm/Honeymoon"/> 💑 Kỷ niệm/Honeymoon</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="occasion" data-label="🎂 Sinh nhật"/> 🎂 Sinh nhật</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="occasion" data-label="👨‍👩‍👧 Gia đình có trẻ nhỏ"/> 👨‍👩‍👧 Gia đình có trẻ nhỏ</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="occasion" data-label="👴 Đi cùng người cao tuổi"/> 👴 Đi cùng người cao tuổi</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="room" data-label="💼 Công tác/Business"/> 💼 Công tác/Business</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="activity" data-label="🧘 Nghỉ dưỡng/Chữa lành"/> 🧘 Nghỉ dưỡng/Chữa lành</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="activity" data-label="🏖️ Khám phá địa phương"/> 🏖️ Khám phá địa phương</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="activity" data-label="📸 Chụp ảnh/Content"/> 📸 Chụp ảnh/Content</label>
+                    </div>
+                </div>
+
+                <div class="pref-card">
+                    <div class="pref-card-title">🎯 Hoạt động quan tâm</div>
+                    <div class="pref-card-sub">Giúp chúng tôi gợi ý dịch vụ và trải nghiệm phù hợp.</div>
+                    <div class="checkbox-grid">
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="activity" data-label="💆 Spa &amp; Massage"/> 💆 Spa &amp; Massage</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="activity" data-label="🔥 BBQ ngoài trời"/> 🔥 BBQ ngoài trời</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="upsell" data-label="🌹 Private dinner"/> 🌹 Private dinner</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="activity" data-label="🚴 Thuê xe đạp/xe máy"/> 🚴 Thuê xe đạp/xe máy</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="activity" data-label="🗺️ Tour địa phương"/> 🗺️ Tour địa phương</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="upsell" data-label="🎂 Setup trang trí phòng"/> 🎂 Setup trang trí phòng</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="activity" data-label="🧘 Yoga buổi sáng"/> 🧘 Yoga buổi sáng</label>
+                        <label class="pref-check-item"><input type="checkbox" class="pref-checkbox" data-type="activity" data-label="🌅 Check-in sớm"/> 🌅 Check-in sớm (nếu có)</label>
+                    </div>
+                </div>
+
+                <div class="pref-card">
+                    <div class="pref-card-title">💬 Nhập tự do – AI sẽ phân tích</div>
+                    <div class="pref-card-sub">Viết bằng câu văn bình thường. AI sẽ hiểu và phân loại thông tin tự động.</div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <textarea id="freeText" rows="5" placeholder="Ví dụ: Bạn gái mình dị ứng hải sản, tụi mình đi kỷ niệm 2 năm, muốn phòng yên tĩnh và không có mùi tinh dầu. Mình thích check-in sớm nếu được..."></textarea>
+                    </div>
+                </div>
+
+                <div class="pref-card" style="border:2px solid var(--accent);">
+                    <div class="pref-card-title">🏷️ AI Tags được tạo ra</div>
+                    <div class="pref-card-sub">Đây là thông tin AI sẽ gửi đến khách sạn dựa trên lựa chọn của bạn.</div>
+                    <div id="aiTagPreview" class="tag-preview">
+                        <span style="color:var(--gray);font-size:0.85rem;">Chọn nhu cầu bên trên để xem AI tags được tạo ra</span>
+                    </div>
+                    <div id="aiProcessing" class="ai-processing" style="margin-top:20px;">
+                        <div style="font-size:1.5rem;margin-bottom:8px;">🤖</div>
+                        <div style="font-weight:700;font-size:1rem;">AI đang phân tích nhu cầu của bạn...</div>
+                        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                        <div style="font-size:0.82rem;opacity:0.8;">Đang tạo action tags và gửi đến khách sạn</div>
+                    </div>
+                </div>
+
+                <div class="pref-card">
+                    <div class="pref-card-title">❤️ Thông tin sức khỏe (tùy chọn)</div>
+                    <div class="pref-card-sub">Chỉ chia sẻ nếu bạn muốn khách sạn lưu ý chăm sóc đặc biệt hơn.</div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <textarea id="healthNote" rows="3" placeholder="Ví dụ: Mình bị hen suyễn, cần phòng không có thảm. Bạn mình bị đau lưng, cần nệm cứng..."></textarea>
+                    </div>
+                </div>
+
+                <div class="pref-card" style="background:var(--bg);">
+                    <label class="filter-checkbox" style="font-size:0.9rem;font-weight:500;">
+                        <input type="checkbox" checked style="accent-color:var(--primary);width:18px;height:18px;"/>
+                        Lưu thông tin này vào tài khoản để dùng cho lần đặt phòng sau
+                    </label>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;border-radius:14px;font-size:1.05rem;">
+                    🚀 Gửi nhu cầu đến khách sạn
+                </button>
+                <p style="text-align:center;margin-top:12px;font-size:0.82rem;color:var(--gray);">
+                    🔒 Thông tin của bạn được mã hóa và chỉ chia sẻ với Fusion Maia Đà Nẵng.
+                </p>
+            </form>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.pref-check-item input').forEach(cb => {
+            cb.addEventListener('change', () => {
+                cb.closest('.pref-check-item').classList.toggle('checked', cb.checked);
+            });
+        });
+
+        // Demo AI processing animation
+        const prefForm = document.getElementById('prefForm');
+        if (prefForm) {
+            prefForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const processing = document.getElementById('aiProcessing');
+                const fill = document.getElementById('progressFill');
+                processing.style.display = 'block';
+                processing.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => { fill.style.width = '100%'; }, 100);
+                setTimeout(() => {
+                    prefForm.submit();
+                }, 2500);
+            });
+        }
+    </script>
+}

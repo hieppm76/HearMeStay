@@ -1,0 +1,142 @@
+@{
+    ViewData["Title"] = "Đặt phòng";
+}
+
+<style>
+    .booking-page { padding-top: 70px; }
+    .booking-content { padding: 40px 5%; max-width: 1100px; margin: 0 auto; }
+    .booking-layout { display: grid; grid-template-columns: 1fr 360px; gap: 36px; }
+    .booking-card { background: white; border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow); margin-bottom: 24px; }
+    .booking-card h2 { font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .payment-option { border: 2px solid var(--gray-light); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 12px; cursor: pointer; display: flex; align-items: center; gap: 14px; transition: border-color 0.2s; }
+    .payment-option.selected { border-color: var(--primary); background: var(--bg); }
+    .payment-icon { width: 42px; height: 42px; background: var(--bg); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+    .payment-label { font-weight: 600; font-size: 0.9rem; color: var(--navy); }
+    .payment-desc { font-size: 0.8rem; color: var(--gray); }
+    .radio-circle { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--gray-light); margin-left: auto; display: flex; align-items: center; justify-content: center; }
+    .radio-circle.active { border-color: var(--primary); background: var(--primary); }
+    .radio-circle.active::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: white; }
+    .hotel-mini { display: flex; gap: 14px; align-items: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--gray-light); }
+    .hotel-mini-img { width: 80px; height: 70px; border-radius: 10px; object-fit: cover; }
+    .hotel-mini-name { font-weight: 700; color: var(--navy); font-size: 0.95rem; }
+    .hotel-mini-meta { font-size: 0.8rem; color: var(--gray); margin-top: 4px; }
+    .step-indicator { display: flex; align-items: center; gap: 0; margin-bottom: 40px; }
+    .step-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; }
+    .step-dot.done { background: var(--primary); color: white; }
+    .step-dot.active { background: var(--gradient); color: white; box-shadow: 0 0 0 4px rgba(0,119,182,0.2); }
+    .step-dot.pending { background: var(--gray-light); color: var(--gray); }
+    .step-line { flex: 1; height: 2px; background: var(--gray-light); }
+    .step-line.done { background: var(--primary); }
+    .step-label { font-size: 0.72rem; color: var(--gray); text-align: center; margin-top: 6px; }
+    .step-wrap { display: flex; flex-direction: column; align-items: center; }
+    @@media(max-width:900px){ .booking-layout { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } }
+</style>
+
+<div class="booking-page">
+    <div class="booking-content">
+        <div class="breadcrumb" style="margin-bottom:28px;">
+            <a asp-controller="Home" asp-action="Index">Trang chủ</a><span>/</span>
+            <a asp-controller="Hotel" asp-action="Search">Đà Nẵng</a><span>/</span>
+            <a asp-controller="Hotel" asp-action="Detail" asp-route-id="1">Fusion Maia</a><span>/</span>
+            <span>Đặt phòng</span>
+        </div>
+
+        <div style="max-width:480px;margin-bottom:40px;">
+            <div class="step-indicator">
+                <div class="step-wrap"><div class="step-dot done">✓</div><div class="step-label">Chọn phòng</div></div>
+                <div class="step-line done"></div>
+                <div class="step-wrap"><div class="step-dot active">2</div><div class="step-label" style="color:var(--primary);font-weight:600;">Thông tin</div></div>
+                <div class="step-line"></div>
+                <div class="step-wrap"><div class="step-dot pending">3</div><div class="step-label">AI Preference</div></div>
+                <div class="step-line"></div>
+                <div class="step-wrap"><div class="step-dot pending">4</div><div class="step-label">Xác nhận</div></div>
+            </div>
+        </div>
+
+        <div class="booking-layout">
+            <div>
+                <form asp-controller="Booking" asp-action="Confirm" method="post">
+                    <div class="booking-card">
+                        <h2>👤 Thông tin khách đặt phòng</h2>
+                        <div class="form-row">
+                            <div class="form-group"><label>Họ</label><input type="text" name="LastName" placeholder="Nguyễn" required/></div>
+                            <div class="form-group"><label>Tên</label><input type="text" name="FirstName" placeholder="Minh Anh" required/></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Email</label><input type="email" name="Email" placeholder="email@example.com" required/></div>
+                            <div class="form-group"><label>Số điện thoại</label><input type="tel" name="Phone" placeholder="0901 234 567" required/></div>
+                        </div>
+                        <div class="form-group"><label>Ghi chú (tùy chọn)</label><textarea name="Notes" placeholder="Yêu cầu cơ bản..." style="min-height:80px;"></textarea></div>
+                    </div>
+
+                    <div class="booking-card">
+                        <h2>📅 Chi tiết đặt phòng</h2>
+                        <div class="form-row">
+                            <div class="form-group"><label>Ngày check-in</label><input type="date" name="CheckIn" required/></div>
+                            <div class="form-group"><label>Ngày check-out</label><input type="date" name="CheckOut" required/></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Số lượng khách</label><select name="Guests"><option>1 người lớn</option><option selected>2 người lớn</option><option>2 người lớn + 1 trẻ em</option></select></div>
+                            <div class="form-group"><label>Số lượng phòng</label><select name="Rooms"><option selected>1 phòng</option><option>2 phòng</option></select></div>
+                        </div>
+                        <div class="form-group"><label>Loại phòng</label><select name="RoomType"><option>Garden Suite – 1.850.000 đ/đêm</option><option>Pool Villa – 3.200.000 đ/đêm</option></select></div>
+                    </div>
+
+                    <div class="booking-card">
+                        <h2>💳 Hình thức thanh toán</h2>
+                        <div class="payment-option selected" onclick="selectPayment(this)">
+                            <div class="payment-icon">🏨</div>
+                            <div><div class="payment-label">Thanh toán tại nơi lưu trú</div><div class="payment-desc">Trả tiền khi check-in. Đặt phòng miễn phí ngay.</div></div>
+                            <div class="radio-circle active"></div>
+                        </div>
+                        <div class="payment-option" onclick="selectPayment(this)">
+                            <div class="payment-icon">💰</div>
+                            <div><div class="payment-label">Chuyển khoản ngân hàng</div><div class="payment-desc">Đặt cọc 30% để giữ phòng.</div></div>
+                            <div class="radio-circle"></div>
+                        </div>
+                        <div style="background:#FEF3C7;border-radius:var(--radius-sm);padding:12px 16px;margin-top:16px;font-size:0.85rem;color:#92400E;">
+                            ℹ️ Miễn phí hủy phòng trước 24 giờ so với giờ check-in.
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;border-radius:14px;">Tiếp theo: Chia sẻ nhu cầu với AI →</button>
+                </form>
+            </div>
+
+            <div>
+                <div class="booking-summary">
+                    <div class="hotel-mini">
+                        <img class="hotel-mini-img" src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=200&q=80" alt="Hotel"/>
+                        <div><div class="hotel-mini-name">Fusion Maia Đà Nẵng</div><div class="hotel-mini-meta">⭐⭐⭐⭐⭐ Resort · Bãi biển Mỹ Khê</div><div class="rating" style="margin-top:4px;"><span class="star">★</span> 4.9</div></div>
+                    </div>
+                    <div class="summary-item"><span style="color:var(--gray);">🛏️ Phòng</span><span style="font-weight:600;">Garden Suite</span></div>
+                    <div class="summary-item"><span style="color:var(--gray);">📅 Check-in</span><span style="font-weight:600;">20/06/2026</span></div>
+                    <div class="summary-item"><span style="color:var(--gray);">📅 Check-out</span><span style="font-weight:600;">23/06/2026</span></div>
+                    <div class="summary-item"><span style="color:var(--gray);">👤 Khách</span><span style="font-weight:600;">2 người lớn</span></div>
+                    <div style="border-top:2px solid var(--gray-light);margin:16px 0;"></div>
+                    <div class="summary-item"><span>3 đêm × 1.850.000 đ</span><span>5.550.000 đ</span></div>
+                    <div class="summary-item"><span>Phí dịch vụ (5%)</span><span>277.500 đ</span></div>
+                    <div class="summary-total"><span>💰 Tổng cộng</span><span>5.827.500 đ</span></div>
+                    <div style="margin-top:16px;background:linear-gradient(135deg,#E0F7FA,#F0F9FF);border-radius:var(--radius-sm);padding:14px;text-align:center;">
+                        <div style="font-size:0.82rem;color:var(--primary);font-weight:600;">🤖 Sau khi đặt phòng</div>
+                        <div style="font-size:0.78rem;color:var(--gray);margin-top:4px;">Bạn sẽ điền AI Preference Form.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function selectPayment(el) {
+    document.querySelectorAll('.payment-option').forEach(o => {
+        o.classList.remove('selected');
+        o.querySelector('.radio-circle').classList.remove('active');
+    });
+    el.classList.add('selected');
+    el.querySelector('.radio-circle').classList.add('active');
+}
+</script>
+}
