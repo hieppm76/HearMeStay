@@ -1,0 +1,14 @@
+@model HearMeStay.Models.AddOnService
+@{ ViewData["Title"] = "Thêm dịch vụ"; }
+<h2 class="fw-bold mb-4">Thêm dịch vụ cộng thêm</h2>
+<div class="card shadow-sm border-0 p-4" style="border-radius:16px;">
+<form asp-action="Create" method="post">
+    <input type="hidden" asp-for="AccommodationId" />
+    <div class="row g-3">
+        <div class="col-md-6"><label asp-for="Name" class="form-label"></label><input asp-for="Name" class="form-control" /></div>
+        <div class="col-md-3"><label asp-for="Price" class="form-label"></label><input asp-for="Price" class="form-control" type="number" /></div>
+        <div class="col-md-3"><label asp-for="ServiceType" class="form-label"></label><select asp-for="ServiceType" class="form-select"><option value="Spa">Spa</option><option value="Tour">Tour</option><option value="BBQ">BBQ</option><option value="Decoration">Trang trí</option><option value="AirportPickup">Đưa đón sân bay</option><option value="PrivateDinner">Bữa tối riêng</option><option value="Other">Khác</option></select></div>
+        <div class="col-12"><label asp-for="Description" class="form-label"></label><textarea asp-for="Description" class="form-control" rows="2"></textarea></div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Thêm</button>
+</form></div>

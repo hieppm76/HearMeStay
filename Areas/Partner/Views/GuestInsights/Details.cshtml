@@ -1,0 +1,104 @@
+@model HearMeStay.Models.GuestInsight
+@{ ViewData["Title"] = "Chi tiết Guest Insight"; }
+@{
+    var priCls = Model.PriorityLevel switch { HearMeStay.Models.Enums.PriorityLevel.Low=>"badge-priority-low", HearMeStay.Models.Enums.PriorityLevel.Medium=>"badge-priority-medium", HearMeStay.Models.Enums.PriorityLevel.High=>"badge-priority-high", HearMeStay.Models.Enums.PriorityLevel.Critical=>"badge-priority-critical", _=>"" };
+    var priText = Model.PriorityLevel switch { HearMeStay.Models.Enums.PriorityLevel.Low=>"Thấp", HearMeStay.Models.Enums.PriorityLevel.Medium=>"Trung bình", HearMeStay.Models.Enums.PriorityLevel.High=>"Cao", HearMeStay.Models.Enums.PriorityLevel.Critical=>"Khẩn cấp", _=>"" };
+}
+
+<h2 class="fw-bold mb-1"><i class="bi bi-lightbulb"></i> Guest Insight</h2>
+<p class="text-muted mb-4">Khách: <strong>@Model.GuestPreference.Booking.User.FullName</strong> | Mã: @Model.GuestPreference.Booking.BookingCode | Phòng: @Model.GuestPreference.Booking.RoomType.Name</p>
+
+<!-- Summary & Priority -->
+<div class="card shadow-sm border-0 p-4 mb-4" style="border-radius:16px;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-0">Tóm tắt AI</h5>
+        <span class="badge @priCls px-3 py-2">Ưu tiên: @priText</span>
+    </div>
+    <p class="mb-0">@Model.Summary</p>
+</div>
+
+<!-- Tags -->
+@if (Model.Tags.Any())
+{
+    <div class="card shadow-sm border-0 p-4 mb-4" style="border-radius:16px;">
+        <h5 class="fw-bold mb-3">Thẻ nhu cầu</h5>
+        <div class="d-flex flex-wrap gap-2">
+            @foreach (var tag in Model.Tags)
+            {
+                var tagCls = tag.Category switch {
+                    HearMeStay.Models.Enums.TagCategory.Allergy=>"tag-allergy", HearMeStay.Models.Enums.TagCategory.FoodDiet=>"tag-fooddiet",
+                    HearMeStay.Models.Enums.TagCategory.RoomPreference=>"tag-room", HearMeStay.Models.Enums.TagCategory.HealthNote=>"tag-health",
+                    HearMeStay.Models.Enums.TagCategory.SpecialOccasion=>"tag-occasion", HearMeStay.Models.Enums.TagCategory.FamilyNeed=>"tag-family",
+                    HearMeStay.Models.Enums.TagCategory.ActivityInterest=>"tag-activity", HearMeStay.Models.Enums.TagCategory.UpsellOpportunity=>"tag-upsell", _=>"" };
+                var sevIcon = tag.Severity switch { HearMeStay.Models.Enums.SeverityLevel.High=>"🔴", HearMeStay.Models.Enums.SeverityLevel.Medium=>"🟡", _=>"🟢" };
+                <span class="badge @tagCls px-3 py-2">@sevIcon @tag.TagName</span>
+            }
+        </div>
+    </div>
+}
+
+<!-- Tasks by Department -->
+@if (Model.Tasks.Any())
+{
+    <div class="card shadow-sm border-0 p-4 mb-4" style="border-radius:16px;">
+        <h5 class="fw-bold mb-3">Việc cần chuẩn bị</h5>
+        @foreach (var dept in Model.Tasks.GroupBy(t => t.Department))
+        {
+            var deptName = dept.Key switch { HearMeStay.Models.Enums.Department.Reception=>"Lễ tân", HearMeStay.Models.Enums.Department.Housekeeping=>"Buồng phòng", HearMeStay.Models.Enums.Department.Kitchen=>"Bếp", HearMeStay.Models.Enums.Department.CustomerService=>"Chăm sóc khách hàng", HearMeStay.Models.Enums.Department.Manager=>"Quản lý", _=>"" };
+            <h6 class="fw-bold mt-3"><i class="bi bi-people"></i> @deptName</h6>
+            @foreach (var task in dept)
+            {
+                var tsCls = task.TaskStatus switch { HearMeStay.Models.Enums.GuestTaskStatus.Pending=>"badge-pending", HearMeStay.Models.Enums.GuestTaskStatus.InProgress=>"badge bg-info text-dark", HearMeStay.Models.Enums.GuestTaskStatus.Done=>"badge-completed", HearMeStay.Models.Enums.GuestTaskStatus.CannotSupport=>"badge-rejected", HearMeStay.Models.Enums.GuestTaskStatus.NeedMoreInfo=>"badge-pending", _=>"" };
+                var tsText = task.TaskStatus switch { HearMeStay.Models.Enums.GuestTaskStatus.Pending=>"Chưa xử lý", HearMeStay.Models.Enums.GuestTaskStatus.InProgress=>"Đang xử lý", HearMeStay.Models.Enums.GuestTaskStatus.Done=>"Đã hoàn thành", HearMeStay.Models.Enums.GuestTaskStatus.CannotSupport=>"Không thể hỗ trợ", HearMeStay.Models.Enums.GuestTaskStatus.NeedMoreInfo=>"Cần thêm thông tin", _=>"" };
+                <div class="d-flex justify-content-between align-items-center border rounded p-3 mb-2">
+                    <div>
+                        <strong>@task.Title</strong>
+                        <p class="text-muted small mb-0">@task.Description</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge @tsCls px-2 py-1">@tsText</span>
+                        <form asp-action="UpdateTaskStatus" method="post" class="d-flex gap-1">
+                            <input type="hidden" name="taskId" value="@task.Id" />
+                            <select name="status" class="form-select form-select-sm" style="width:auto;">
+                                <option value="Pending">Chưa xử lý</option>
+                                <option value="InProgress">Đang xử lý</option>
+                                <option value="Done">Đã hoàn thành</option>
+                                <option value="CannotSupport">Không thể hỗ trợ</option>
+                                <option value="NeedMoreInfo">Cần thêm thông tin</option>
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Cập nhật</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}
+
+<!-- Upsell Suggestions -->
+@if (Model.UpsellSuggestions.Any())
+{
+    <div class="card shadow-sm border-0 p-4 mb-4" style="border-radius:16px;">
+        <h5 class="fw-bold mb-3">Gợi ý dịch vụ cộng thêm</h5>
+        @foreach (var u in Model.UpsellSuggestions)
+        {
+            <div class="border rounded p-3 mb-2">
+                <strong>@u.Title</strong> @if (u.EstimatedPrice.HasValue) { <span class="hms-price ms-2">@u.EstimatedPrice.Value.ToString("N0")₫</span> }
+                <p class="text-muted small mb-0">@u.Reason</p>
+            </div>
+        }
+    </div>
+}
+
+<!-- Guest Shared Info -->
+<div class="card shadow-sm border-0 p-4 mb-4" style="border-radius:16px;">
+    <h5 class="fw-bold mb-3">Thông tin khách đã chia sẻ</h5>
+    @if (!string.IsNullOrEmpty(Model.GuestPreference.RawText)) { <p><strong>Ghi chú:</strong> @Model.GuestPreference.RawText</p> }
+    @if (Model.GuestPreference.HasFoodAllergy) { <p><strong>Dị ứng:</strong> @Model.GuestPreference.FoodAllergyDetail</p> }
+    @if (!string.IsNullOrEmpty(Model.GuestPreference.DietPreference)) { <p><strong>Chế độ ăn:</strong> @Model.GuestPreference.DietPreference</p> }
+    @if (!string.IsNullOrEmpty(Model.GuestPreference.RoomPreference)) { <p><strong>Yêu cầu phòng:</strong> @Model.GuestPreference.RoomPreference</p> }
+    @if (!string.IsNullOrEmpty(Model.GuestPreference.HealthNote)) { <p><strong>Sức khỏe:</strong> @Model.GuestPreference.HealthNote</p> }
+    @if (!string.IsNullOrEmpty(Model.GuestPreference.SpecialOccasion)) { <p><strong>Dịp đặc biệt:</strong> @Model.GuestPreference.SpecialOccasion</p> }
+</div>
+
+<a asp-action="Index" class="btn btn-outline-secondary">Quay lại danh sách</a>

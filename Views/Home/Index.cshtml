@@ -1,0 +1,125 @@
+@model List<HearMeStay.ViewModels.AccommodationCardViewModel>
+@{ ViewData["Title"] = "Trang chủ"; }
+
+<!-- Hero -->
+<section class="hms-hero">
+    <video autoplay loop muted playsinline>
+        <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260403_050628_c4e32401-fab4-4a27-b7a8-6e9291cd5959.mp4" type="video/mp4" />
+    </video>
+    <div class="hms-hero-overlay"></div>
+    <div class="hms-hero-content">
+        <div class="row align-items-end g-4">
+            <div class="col-lg-7">
+                <h1 class="char-animate mb-3">Đặt phòng phù hợp
+với chính bạn.</h1>
+                <p class="hero-sub mb-4 fade-up">HearMeStay dùng AI để hiểu sở thích, thói quen và nhu cầu cá nhân của bạn — trước khi bạn đến nơi lưu trú.</p>
+                <div class="d-flex gap-2 flex-wrap fade-up">
+                    <a asp-controller="Accommodations" asp-action="Index" class="btn btn-white btn-lg px-4">Tìm nơi lưu trú</a>
+                    <a asp-controller="Home" asp-action="About" class="btn btn-glass btn-lg px-4">Khám phá cách hoạt động</a>
+                </div>
+            </div>
+            <div class="col-lg-5 fade-up">
+                <div class="hero-glass-tag liquid-glass-light" style="border-radius:var(--r-lg);padding:1.5rem;">
+                    <div style="font-size:1.1rem;font-weight:600;margin-bottom:.5rem;">✨ Trải nghiệm khác biệt</div>
+                    <p class="mb-0" style="color:var(--white-70);font-size:.9rem;line-height:1.7;">Đặt phòng. Chia sẻ nhu cầu cá nhân. Được chuẩn bị trước khi bạn đến.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Search -->
+<div class="hms-search-section">
+    <div class="hms-search-card">
+        <form asp-controller="Accommodations" asp-action="Index" method="get" class="row g-3 align-items-end">
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label">Điểm đến</label>
+                <input type="text" name="City" class="form-control" placeholder="Bạn muốn đi đâu?" />
+            </div>
+            <div class="col-lg-2 col-md-3"><label class="form-label">Nhận phòng</label><input type="date" name="CheckIn" class="form-control" /></div>
+            <div class="col-lg-2 col-md-3"><label class="form-label">Trả phòng</label><input type="date" name="CheckOut" class="form-control" /></div>
+            <div class="col-lg-2 col-md-3"><label class="form-label">Số khách</label><input type="number" name="Guests" class="form-control" min="1" value="2" /></div>
+            <div class="col-lg-3 col-md-3"><button type="submit" class="btn btn-primary w-100 py-2"><i class="bi bi-search me-1"></i>Tìm kiếm</button></div>
+        </form>
+    </div>
+</div>
+
+<!-- How it works -->
+<section class="hms-section">
+    <div class="container">
+        <div class="text-center mb-5 fade-up">
+            <h2 class="hms-section-title">HearMeStay hoạt động như thế nào?</h2>
+            <p class="hms-section-sub mt-2">3 bước đơn giản để có kỳ nghỉ hoàn hảo</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4 fade-up"><div class="hms-step"><span class="hms-step-num">1</span><div class="hms-step-icon"><i class="bi bi-search"></i></div><h5 class="fw-bold mb-2">Tìm nơi lưu trú</h5><p class="text-muted small mb-0">Khám phá khách sạn, homestay, villa phù hợp nhu cầu và ngân sách.</p></div></div>
+            <div class="col-md-4 fade-up"><div class="hms-step"><span class="hms-step-num">2</span><div class="hms-step-icon"><i class="bi bi-chat-heart"></i></div><h5 class="fw-bold mb-2">Chia sẻ nhu cầu</h5><p class="text-muted small mb-0">Chia sẻ dị ứng, chế độ ăn, dịp đặc biệt để được phục vụ tốt hơn.</p></div></div>
+            <div class="col-md-4 fade-up"><div class="hms-step"><span class="hms-step-num">3</span><div class="hms-step-icon"><i class="bi bi-stars"></i></div><h5 class="fw-bold mb-2">Được chuẩn bị trước</h5><p class="text-muted small mb-0">AI phân tích và gửi thông tin đến đúng bộ phận trước khi bạn đến.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- Why -->
+<section class="hms-section" style="background:#fff;">
+    <div class="container">
+        <div class="text-center mb-5 fade-up"><h2 class="hms-section-title">Vì sao chọn HearMeStay?</h2></div>
+        <div class="row g-4">
+            <div class="col-md-3 col-6 fade-up"><div class="hms-why h-100"><div class="hms-why-icon" style="background:var(--teal-pale);color:var(--teal);"><i class="bi bi-cpu"></i></div><h6 class="fw-bold mb-1" style="font-size:.88rem;">AI hiểu nhu cầu</h6><p class="text-muted small mb-0">Tự động phân tích trước check-in.</p></div></div>
+            <div class="col-md-3 col-6 fade-up"><div class="hms-why h-100"><div class="hms-why-icon" style="background:#DBEAFE;color:#1E40AF;"><i class="bi bi-shield-check"></i></div><h6 class="fw-bold mb-1" style="font-size:.88rem;">Không bỏ sót</h6><p class="text-muted small mb-0">Hạn chế bỏ sót yêu cầu cá nhân.</p></div></div>
+            <div class="col-md-3 col-6 fade-up"><div class="hms-why h-100"><div class="hms-why-icon" style="background:#FEF3C7;color:#92400E;"><i class="bi bi-heart"></i></div><h6 class="fw-bold mb-1" style="font-size:.88rem;">Phù hợp mọi người</h6><p class="text-muted small mb-0">Dị ứng, ăn chay, gia đình, cặp đôi.</p></div></div>
+            <div class="col-md-3 col-6 fade-up"><div class="hms-why h-100"><div class="hms-why-icon" style="background:#F3E8FF;color:#6B21A8;"><i class="bi bi-building"></i></div><h6 class="fw-bold mb-1" style="font-size:.88rem;">Giúp khách sạn</h6><p class="text-muted small mb-0">Chuẩn bị dịch vụ tốt hơn.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured -->
+@if (Model.Any())
+{
+<section class="hms-section">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4 fade-up">
+            <h2 class="hms-section-title mb-0">Nơi lưu trú nổi bật</h2>
+            <a asp-controller="Accommodations" asp-action="Index" class="btn btn-outline-primary btn-sm">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+        </div>
+        <div class="row g-4">
+            @foreach (var acc in Model)
+            {
+            <div class="col-lg-4 col-md-6 fade-up">
+                <div class="hms-card h-100">
+                    <div class="card-img-wrap"><img src="@acc.MainImageUrl" class="card-img-top" alt="@acc.Name" /></div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="fw-bold mb-0">@acc.Name</h6>
+                            @if(acc.StarRating.HasValue){<span class="badge" style="background:#FEF3C7;color:#92400E;font-size:.68rem;"><i class="bi bi-star-fill"></i> @acc.StarRating</span>}
+                        </div>
+                        <p class="text-muted small mb-2"><i class="bi bi-geo-alt"></i> @acc.City, @acc.Province</p>
+                        <div class="mb-2">
+                            @if(acc.HasQuietRoom){<span class="badge hms-badge hms-badge-ai me-1">🤫 Yên tĩnh</span>}
+                            @if(acc.HasVeganMeal){<span class="badge hms-badge hms-badge-ai me-1">🌱 Ăn chay</span>}
+                            @if(acc.HasAllergySupport){<span class="badge hms-badge hms-badge-ai me-1">🛡️ Dị ứng</span>}
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div><span class="hms-price">@acc.MinPrice.ToString("N0")₫</span><span class="text-muted small">/đêm</span></div>
+                            @if(acc.ReviewCount>0){<span class="small"><i class="bi bi-star-fill text-warning"></i> @acc.AverageRating.ToString("F1")</span>}
+                        </div>
+                    </div>
+                    <div class="card-footer"><a asp-controller="Accommodations" asp-action="Details" asp-route-id="@acc.Id" class="btn btn-outline-primary btn-sm w-100">Xem chi tiết</a></div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</section>
+}
+
+<!-- CTA -->
+<section class="hms-cta py-5">
+    <div class="container text-center position-relative" style="z-index:2;">
+        <h2 class="fw-bold text-white mb-3 fade-up">Nâng tầm trải nghiệm lưu trú cùng HearMeStay</h2>
+        <p class="mb-4 fade-up" style="color:var(--white-50);max-width:480px;margin:0 auto;">Nơi mọi chi tiết đều được chuẩn bị trước cho bạn.</p>
+        <div class="fade-up">
+            <a asp-controller="Accommodations" asp-action="Index" class="btn btn-white btn-lg me-2 px-4">Tìm nơi lưu trú</a>
+            <a asp-controller="Home" asp-action="BecomePartner" class="btn btn-glass btn-lg px-4">Trở thành đối tác</a>
+        </div>
+    </div>
+</section>

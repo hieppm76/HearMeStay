@@ -1,0 +1,24 @@
+@model List<HearMeStay.Models.GuestInsight>
+@{ ViewData["Title"] = "Guest Insights"; }
+<p class="hms-section-sub mb-4">AI phân tích nhu cầu khách hàng từ form cá nhân hóa.</p>
+@if(!Model.Any()){<div class="text-center py-5"><div class="hms-step-icon mx-auto mb-3" style="width:60px;height:60px;"><i class="bi bi-lightbulb"></i></div><p class="text-muted">Chưa có insight nào. Insight sẽ xuất hiện khi khách điền form nhu cầu cá nhân.</p></div>}
+else{
+    @foreach(var gi in Model){
+        var priCls=gi.PriorityLevel switch{HearMeStay.Models.Enums.PriorityLevel.Low=>"badge-priority-low",HearMeStay.Models.Enums.PriorityLevel.Medium=>"badge-priority-medium",HearMeStay.Models.Enums.PriorityLevel.High=>"badge-priority-high",HearMeStay.Models.Enums.PriorityLevel.Critical=>"badge-priority-critical",_=>""};
+        var priText=gi.PriorityLevel switch{HearMeStay.Models.Enums.PriorityLevel.Low=>"Thấp",HearMeStay.Models.Enums.PriorityLevel.Medium=>"Trung bình",HearMeStay.Models.Enums.PriorityLevel.High=>"Cao",HearMeStay.Models.Enums.PriorityLevel.Critical=>"Khẩn cấp",_=>""};
+        <div class="hms-form-section fade-up">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <div style="width:32px;height:32px;border-radius:50%;background:var(--teal-pale);color:var(--teal);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;">@gi.GuestPreference.Booking.User.FullName.Substring(0,1)</div>
+                        <strong>@gi.GuestPreference.Booking.User.FullName</strong>
+                    </div>
+                    <p class="text-muted small mb-2">Mã: <code>@gi.GuestPreference.Booking.BookingCode</code> · Check-in: @gi.GuestPreference.Booking.CheckInDate.ToString("dd/MM/yyyy")</p>
+                    <p class="mb-2" style="font-size:.9rem;">@gi.Summary</p>
+                    <div class="d-flex flex-wrap gap-1">@foreach(var tag in gi.Tags){<span class="badge hms-badge hms-badge-ai">@tag.TagName</span>}</div>
+                </div>
+                <div class="text-end"><span class="badge badge-status @priCls mb-2">@priText</span><br/><a asp-action="Details" asp-route-id="@gi.Id" class="btn btn-sm btn-outline-primary mt-2">Xem chi tiết</a></div>
+            </div>
+        </div>
+    }
+}

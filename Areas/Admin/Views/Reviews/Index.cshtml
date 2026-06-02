@@ -1,0 +1,14 @@
+@model List<HearMeStay.Models.Review>
+@{ ViewData["Title"] = "Quản lý đánh giá"; }
+<h2 class="fw-bold mb-4">Quản lý đánh giá</h2>
+<table class="table table-hover bg-white rounded shadow-sm">
+    <thead class="table-light"><tr><th>Khách</th><th>Nơi lưu trú</th><th>Đánh giá</th><th>Cá nhân hóa</th><th>Hiển thị</th><th>Hành động</th></tr></thead>
+    <tbody>
+    @foreach (var r in Model)
+    {
+        <tr><td>@r.User.FullName</td><td>@r.Accommodation.Name</td><td><i class="bi bi-star-fill text-warning"></i> @r.Rating/5</td><td>@r.PersonalizationRating/5</td>
+        <td>@(r.IsVisible ? "✅" : "❌")</td>
+        <td>@if (r.IsVisible) { <form asp-action="Hide" asp-route-id="@r.Id" method="post" class="d-inline"><button class="btn btn-sm btn-outline-danger">Ẩn</button></form> } else { <form asp-action="Show" asp-route-id="@r.Id" method="post" class="d-inline"><button class="btn btn-sm btn-outline-success">Hiện</button></form> }</td></tr>
+    }
+    </tbody>
+</table>

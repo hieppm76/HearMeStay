@@ -1,0 +1,20 @@
+@{ ViewData["Title"] = "Tổng quan"; }
+@if(ViewBag.NoAccommodation==true){
+    <div class="text-center py-5 fade-up"><div class="hms-step-icon mx-auto mb-3" style="width:72px;height:72px;"><i class="bi bi-house-add" style="font-size:1.5rem;"></i></div><h4 class="fw-bold">Chào mừng đến với HearMeStay!</h4><p class="text-muted mb-3">Hãy tạo nơi lưu trú đầu tiên của bạn.</p><a asp-action="Create" asp-controller="Accommodations" class="btn btn-primary btn-lg"><i class="bi bi-plus-lg me-1"></i>Tạo nơi lưu trú</a></div>
+}else{
+    <div class="hms-form-section d-flex align-items-center justify-content-between mb-4" style="padding:.85rem 1.25rem;">
+        <div class="d-flex align-items-center gap-3"><div class="hms-step-icon" style="width:40px;height:40px;margin:0;"><i class="bi bi-house"></i></div><div><strong>@ViewBag.AccommodationName</strong><div>@if(ViewBag.AccommodationStatus==HearMeStay.Models.Enums.AccommodationStatus.Approved){<span class="badge badge-status badge-confirmed">✅ Đã duyệt</span>}else if(ViewBag.AccommodationStatus==HearMeStay.Models.Enums.AccommodationStatus.Pending){<span class="badge badge-status badge-pending">⏳ Chờ duyệt</span>}else{<span class="badge badge-status badge-rejected">❌ Bị từ chối</span>}</div></div></div>
+        <a asp-controller="Accommodations" asp-action="MyAccommodation" class="btn btn-outline-primary btn-sm">Quản lý <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="row g-3 mb-4">
+        <div class="col-lg-3 col-md-6"><div class="hms-stat"><div class="d-flex align-items-center gap-3"><div class="stat-icon" style="background:#FEF3C7;color:#92400E;"><i class="bi bi-hourglass-split"></i></div><div><div class="stat-label">Chờ xác nhận</div><div class="stat-value">@ViewBag.PendingBookings</div></div></div></div></div>
+        <div class="col-lg-3 col-md-6"><div class="hms-stat"><div class="d-flex align-items-center gap-3"><div class="stat-icon" style="background:#D1FAE5;color:#065F46;"><i class="bi bi-check-circle"></i></div><div><div class="stat-label">Đã xác nhận</div><div class="stat-value">@ViewBag.ConfirmedBookings</div></div></div></div></div>
+        <div class="col-lg-3 col-md-6"><div class="hms-stat"><div class="d-flex align-items-center gap-3"><div class="stat-icon" style="background:#DBEAFE;color:#1E40AF;"><i class="bi bi-calendar-event"></i></div><div><div class="stat-label">Sắp check-in</div><div class="stat-value">@ViewBag.UpcomingCheckIns</div></div></div></div></div>
+        <div class="col-lg-3 col-md-6"><div class="hms-stat"><div class="d-flex align-items-center gap-3"><div class="stat-icon" style="background:#FEE2E2;color:#991B1B;"><i class="bi bi-exclamation-triangle"></i></div><div><div class="stat-label">Ưu tiên cao</div><div class="stat-value">@ViewBag.HighPriorityInsights</div></div></div></div></div>
+    </div>
+    <div class="row g-3">
+        <div class="col-lg-4 col-md-6"><div class="hms-stat"><div class="stat-label mb-1"><i class="bi bi-cash-stack me-1" style="color:var(--teal);"></i>Doanh thu dự kiến</div><div class="stat-value hms-price">@(((decimal)ViewBag.Revenue).ToString("N0"))₫</div></div></div>
+        <div class="col-lg-4 col-md-6"><div class="hms-stat"><div class="stat-label mb-1"><i class="bi bi-star-fill me-1 text-warning"></i>Đánh giá trung bình</div><div class="stat-value">@(((double)ViewBag.AvgRating).ToString("F1"))<span class="text-muted fs-6 fw-normal">/5</span></div></div></div>
+        <div class="col-lg-4 col-md-6"><div class="hms-stat"><div class="stat-label mb-1"><i class="bi bi-cpu me-1" style="color:var(--teal);"></i>Tỷ lệ form AI</div><div class="stat-value">@(((double)ViewBag.PreferenceRate).ToString("F0"))<span class="text-muted fs-6 fw-normal">%</span></div></div></div>
+    </div>
+}

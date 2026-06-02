@@ -1,0 +1,39 @@
+@model HearMeStay.Models.Accommodation
+@{ ViewData["Title"] = Model.Name; }
+<div style="padding-top:90px;"></div>
+<div class="container py-4">
+    <div class="hms-gallery mb-4 fade-up">
+        @{ var mainImg = Model.Images.FirstOrDefault(i => i.IsMain) ?? Model.Images.FirstOrDefault(); }
+        <img src="@(mainImg?.ImageUrl ?? "/images/placeholder-hotel.svg")" alt="@Model.Name" />
+    </div>
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="mb-4 fade-up">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge badge-status badge-confirmed" style="font-size:.72rem;">@(Model.AccommodationType == HearMeStay.Models.Enums.AccommodationType.Hotel ? "Khách sạn" : Model.AccommodationType.ToString())</span>
+                    @if(Model.StarRating.HasValue){<span class="badge" style="background:#FEF3C7;color:#92400E;"><i class="bi bi-star-fill"></i> @Model.StarRating sao</span>}
+                </div>
+                <h1 class="fw-bold mb-2" style="font-size:1.65rem;">@Model.Name</h1>
+                <p class="text-muted"><i class="bi bi-geo-alt me-1"></i>@Model.Address, @Model.City, @Model.Province</p>
+            </div>
+            <div class="hms-form-section fade-up"><h5 class="fw-bold mb-3"><i class="bi bi-info-circle me-2" style="color:var(--teal);"></i>Tổng quan</h5><p class="text-muted mb-0" style="line-height:1.8;">@Model.Description</p></div>
+            @if(Model.AccommodationAmenities.Any()){<div class="hms-form-section fade-up"><h5 class="fw-bold mb-3"><i class="bi bi-check2-circle me-2" style="color:var(--teal);"></i>Tiện ích</h5><div class="d-flex flex-wrap gap-2">@foreach(var aa in Model.AccommodationAmenities){<span class="hms-amenity"><i class="bi @(aa.Amenity.IconClass??"bi-check")"></i> @aa.Amenity.Name</span>}</div></div>}
+            <div class="mb-4 fade-up"><h4 class="fw-bold mb-3"><i class="bi bi-door-open me-2" style="color:var(--teal);"></i>Loại phòng</h4>
+            @foreach(var room in Model.RoomTypes.Where(r=>r.IsActive)){
+                <div class="hms-room"><div class="d-flex justify-content-between align-items-start flex-wrap gap-3"><div class="flex-grow-1"><h5 class="fw-bold mb-1" style="font-size:1rem;">@room.Name</h5><p class="text-muted small mb-2">@room.Description</p><div class="mb-2"><span class="room-feat"><i class="bi bi-people"></i> @room.Capacity khách</span><span class="room-feat"><i class="bi bi-rulers"></i> @room.RoomSize m²</span><span class="room-feat"><i class="bi bi-bed"></i> @room.BedType</span></div><div class="d-flex flex-wrap gap-1">@if(room.IsQuietRoom){<span class="badge hms-badge hms-badge-ai">🤫 Yên tĩnh</span>}@if(room.SupportsVeganMeal){<span class="badge hms-badge hms-badge-ai">🌱 Ăn chay</span>}@if(room.SupportsAllergyRequest){<span class="badge hms-badge hms-badge-ai">🛡️ Dị ứng</span>}@if(room.NoStrongScentAvailable){<span class="badge hms-badge hms-badge-ai">🌿 Không mùi</span>}</div></div><div class="text-end" style="min-width:150px;"><div class="hms-price fs-5">@room.PricePerNight.ToString("N0")₫<small class="text-muted fw-normal">/đêm</small></div><p class="text-muted small mb-2">Còn @room.AvailableRooms phòng</p>@if(room.AvailableRooms>0){<a asp-controller="Bookings" asp-action="Create" asp-route-roomTypeId="@room.Id" class="btn btn-primary btn-sm"><i class="bi bi-calendar-plus me-1"></i>Chọn phòng</a>}else{<button class="btn btn-secondary btn-sm" disabled>Hết phòng</button>}</div></div></div>}
+            </div>
+            @if(Model.AddOnServices.Any()){<div class="mb-4 fade-up"><h4 class="fw-bold mb-3"><i class="bi bi-plus-circle me-2" style="color:var(--teal);"></i>Dịch vụ cộng thêm</h4><div class="row g-3">@foreach(var svc in Model.AddOnServices){<div class="col-md-4"><div class="hms-why h-100"><h6 class="fw-bold mb-1" style="font-size:.88rem;">@svc.Name</h6><p class="text-muted small mb-2">@svc.Description</p><span class="hms-price small">@svc.Price.ToString("N0")₫</span></div></div>}</div></div>}
+            @if(Model.Reviews.Any()){<div class="mb-4 fade-up"><h4 class="fw-bold mb-3"><i class="bi bi-chat-quote me-2" style="color:var(--teal);"></i>Đánh giá (@Model.Reviews.Count)</h4>@foreach(var r in Model.Reviews.OrderByDescending(r=>r.CreatedAt)){<div class="hms-review"><div class="d-flex justify-content-between mb-2"><div class="d-flex align-items-center gap-2"><div style="width:32px;height:32px;border-radius:50%;background:var(--teal-pale);color:var(--teal);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;">@r.User.FullName.Substring(0,1)</div><strong style="font-size:.88rem;">@r.User.FullName</strong></div><span class="text-muted small">@r.CreatedAt.ToString("dd/MM/yyyy")</span></div><div class="mb-1">@for(int i=1;i<=5;i++){<i class="bi @(i<=r.Rating?"bi-star-fill text-warning":"bi-star text-muted")" style="font-size:.8rem;"></i>}<span class="ms-2 small text-muted">Cá nhân hóa: @r.PersonalizationRating/5</span></div>@if(!string.IsNullOrEmpty(r.Comment)){<p class="mb-0 text-muted small">@r.Comment</p>}</div>}</div>}
+        </div>
+        <div class="col-lg-4 fade-up">
+            <div class="hms-sidebar-info">
+                <h6 class="fw-bold mb-3">Thông tin liên hệ</h6>
+                <div class="info-row"><div class="info-icon"><i class="bi bi-clock"></i></div><div><small class="text-muted d-block">Nhận phòng</small><strong>@Model.CheckInTime.ToString(@"hh\:mm")</strong></div></div>
+                <div class="info-row"><div class="info-icon"><i class="bi bi-clock-history"></i></div><div><small class="text-muted d-block">Trả phòng</small><strong>@Model.CheckOutTime.ToString(@"hh\:mm")</strong></div></div>
+                <div class="info-row"><div class="info-icon"><i class="bi bi-telephone"></i></div><div><small class="text-muted d-block">Điện thoại</small><strong>@Model.Phone</strong></div></div>
+                <div class="info-row"><div class="info-icon"><i class="bi bi-envelope"></i></div><div><small class="text-muted d-block">Email</small><strong style="font-size:.82rem;">@Model.Email</strong></div></div>
+                <div class="mt-3 p-3" style="background:var(--bg-page);border-radius:var(--r);font-size:.8rem;"><i class="bi bi-info-circle me-1" style="color:var(--teal);"></i>@Model.CancellationPolicy</div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+@model List<HearMeStay.Models.GuestInsightTag>
+@{ ViewData["Title"] = "Quản lý thẻ AI"; }
+<h2 class="fw-bold mb-4">Quản lý thẻ AI</h2>
+<table class="table table-hover bg-white rounded shadow-sm">
+    <thead class="table-light"><tr><th>Tên thẻ</th><th>Danh mục</th><th>Mức độ</th><th>Booking</th></tr></thead>
+    <tbody>
+    @foreach (var t in Model)
+    {
+        <tr><td><span class="badge hms-badge-ai">@t.TagName</span></td><td>@t.Category</td><td>@t.Severity</td><td>@t.GuestInsight.GuestPreference.Booking.BookingCode</td></tr>
+    }
+    </tbody>
+</table>

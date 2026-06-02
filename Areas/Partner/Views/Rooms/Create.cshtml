@@ -1,0 +1,23 @@
+@model HearMeStay.Models.RoomType
+@{ ViewData["Title"] = "Thêm loại phòng"; }
+<h2 class="fw-bold mb-4">Thêm loại phòng</h2>
+<div class="card shadow-sm border-0 p-4" style="border-radius:16px;">
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="AccommodationId" />
+    <div class="row g-3">
+        <div class="col-md-6"><label asp-for="Name" class="form-label"></label><input asp-for="Name" class="form-control" /></div>
+        <div class="col-md-6"><label asp-for="PricePerNight" class="form-label"></label><input asp-for="PricePerNight" class="form-control" type="number" /></div>
+        <div class="col-12"><label asp-for="Description" class="form-label"></label><textarea asp-for="Description" class="form-control" rows="2"></textarea></div>
+        <div class="col-md-3"><label asp-for="Capacity" class="form-label"></label><input asp-for="Capacity" class="form-control" type="number" min="1" /></div>
+        <div class="col-md-3"><label asp-for="TotalRooms" class="form-label"></label><input asp-for="TotalRooms" class="form-control" type="number" min="0" /></div>
+        <div class="col-md-3"><label asp-for="AvailableRooms" class="form-label"></label><input asp-for="AvailableRooms" class="form-control" type="number" min="0" /></div>
+        <div class="col-md-3"><label asp-for="BedType" class="form-label"></label><input asp-for="BedType" class="form-control" /></div>
+        <div class="col-md-3"><label asp-for="RoomSize" class="form-label"></label><input asp-for="RoomSize" class="form-control" type="number" step="0.1" /></div>
+        <div class="col-md-9"><label class="form-label">Ảnh phòng</label><input type="file" name="mainImage" class="form-control" accept=".jpg,.jpeg,.png,.webp" /></div>
+        <div class="col-md-3"><div class="form-check mt-4"><input asp-for="IsQuietRoom" class="form-check-input" /><label asp-for="IsQuietRoom" class="form-check-label"></label></div></div>
+        <div class="col-md-3"><div class="form-check mt-4"><input asp-for="SupportsVeganMeal" class="form-check-input" /><label asp-for="SupportsVeganMeal" class="form-check-label"></label></div></div>
+        <div class="col-md-3"><div class="form-check mt-4"><input asp-for="SupportsAllergyRequest" class="form-check-input" /><label asp-for="SupportsAllergyRequest" class="form-check-label"></label></div></div>
+        <div class="col-md-3"><div class="form-check mt-4"><input asp-for="NoStrongScentAvailable" class="form-check-input" /><label asp-for="NoStrongScentAvailable" class="form-check-label"></label></div></div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Thêm phòng</button>
+</form></div>

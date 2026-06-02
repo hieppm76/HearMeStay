@@ -1,0 +1,14 @@
+@model List<HearMeStay.Models.CommissionTransaction>
+@{ ViewData["Title"] = "Quản lý hoa hồng"; }
+<h2 class="fw-bold mb-4">Quản lý hoa hồng</h2>
+<table class="table table-hover bg-white rounded shadow-sm">
+    <thead class="table-light"><tr><th>Booking</th><th>Nơi lưu trú</th><th>Tổng tiền</th><th>Hoa hồng</th><th>Trạng thái</th><th>Hành động</th></tr></thead>
+    <tbody>
+    @foreach (var c in Model)
+    {
+        var st = c.Status switch { HearMeStay.Models.Enums.CommissionStatus.Pending=>"Chờ xử lý", HearMeStay.Models.Enums.CommissionStatus.Payable=>"Cần thanh toán", HearMeStay.Models.Enums.CommissionStatus.Paid=>"Đã thanh toán", HearMeStay.Models.Enums.CommissionStatus.Cancelled=>"Đã hủy", _=>"" };
+        <tr><td>@c.Booking.BookingCode</td><td>@c.Accommodation.Name</td><td>@c.TotalAmount.ToString("N0")₫</td><td class="fw-bold">@c.CommissionAmount.ToString("N0")₫</td><td>@st</td>
+        <td>@if (c.Status != HearMeStay.Models.Enums.CommissionStatus.Paid) { <form asp-action="MarkAsPaid" asp-route-id="@c.Id" method="post" class="d-inline"><button class="btn btn-sm btn-success">Đánh dấu đã thanh toán</button></form> }</td></tr>
+    }
+    </tbody>
+</table>

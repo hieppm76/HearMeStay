@@ -1,0 +1,26 @@
+@model HearMeStay.Models.Booking
+@{ ViewData["Title"] = "Chi tiết đặt phòng"; }
+<h2 class="fw-bold mb-4">Chi tiết đặt phòng #@Model.BookingCode</h2>
+<div class="card shadow-sm border-0 p-4 mb-4" style="border-radius:16px;">
+    <div class="row">
+        <div class="col-md-6">
+            <h5 class="fw-bold">Thông tin khách</h5>
+            <p><strong>Họ tên:</strong> @Model.GuestFullName</p>
+            <p><strong>Email:</strong> @Model.GuestEmail</p>
+            <p><strong>SĐT:</strong> @Model.GuestPhone</p>
+            @if (!string.IsNullOrEmpty(Model.GuestNote)) { <p><strong>Ghi chú:</strong> @Model.GuestNote</p> }
+        </div>
+        <div class="col-md-6">
+            <h5 class="fw-bold">Thông tin đặt phòng</h5>
+            <p><strong>Phòng:</strong> @Model.RoomType.Name</p>
+            <p><strong>Check-in:</strong> @Model.CheckInDate.ToString("dd/MM/yyyy") | <strong>Check-out:</strong> @Model.CheckOutDate.ToString("dd/MM/yyyy")</p>
+            <p><strong>Số khách:</strong> @Model.NumberOfGuests | <strong>Số phòng:</strong> @Model.NumberOfRooms</p>
+            <p><strong>Tổng tiền:</strong> <span class="fw-bold hms-price">@Model.TotalAmount.ToString("N0")₫</span></p>
+        </div>
+    </div>
+</div>
+@if (Model.GuestPreference?.GuestInsight != null)
+{
+    <div class="alert alert-info"><i class="bi bi-lightbulb"></i> Khách đã điền form nhu cầu cá nhân. <a asp-controller="GuestInsights" asp-action="Details" asp-route-id="@Model.GuestPreference.GuestInsight.Id" class="alert-link">Xem Guest Insight</a></div>
+}
+<a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>

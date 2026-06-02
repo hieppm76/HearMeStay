@@ -1,0 +1,116 @@
+@using Microsoft.AspNetCore.Identity
+@using HearMeStay.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - HearMeStay</title>
+    <meta name="description" content="HearMeStay — AI hiểu bạn trước khi bạn đến. Đặt phòng cá nhân hóa." />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="hms-navbar-wrap">
+        <nav class="navbar navbar-expand-lg hms-navbar liquid-glass">
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">HearMeStay</a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navMenu">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Accommodations" asp-action="Index">Nơi lưu trú</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">Cách hoạt động</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="BecomePartner">Trở thành đối tác</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-2">
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        @if (User.IsInRole("HotelPartner"))
+                        {
+                            <a class="nav-link text-white-50" style="font-size:.85rem;" asp-area="Partner" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a class="nav-link text-white-50" style="font-size:.85rem;" asp-area="Admin" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-gear me-1"></i>Admin</a>
+                        }
+                        @if (User.IsInRole("Traveler"))
+                        {
+                            <a class="btn btn-nav" asp-controller="Bookings" asp-action="MyBookings">Đặt phòng của tôi</a>
+                        }
+                        <div class="dropdown">
+                            <a class="btn btn-glass dropdown-toggle d-flex align-items-center gap-2" href="#" data-bs-toggle="dropdown" style="font-size:.82rem;padding:.4rem .9rem;">
+                                <i class="bi bi-person-circle"></i>
+                                <span class="d-none d-lg-inline">@UserManager.GetUserAsync(User).Result?.FullName</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="border-radius:var(--r);min-width:180px;">
+                                <li class="px-3 py-2"><small class="text-muted">Xin chào,</small><br><strong style="font-size:.88rem;">@UserManager.GetUserAsync(User).Result?.FullName</strong></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form asp-controller="Account" asp-action="Logout" method="post">
+                                        <button type="submit" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-2"></i>Đăng xuất</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <a class="nav-link" asp-controller="Account" asp-action="Login" style="color:var(--white-70)!important;font-size:.85rem;">Đăng nhập</a>
+                        <a class="btn btn-nav" asp-controller="Accommodations" asp-action="Index">Bắt đầu đặt phòng</a>
+                    }
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <main>
+        @if (TempData["Success"] != null)
+        {
+            <div class="container mt-3" style="padding-top:90px;"><div class="alert alert-success alert-dismissible fade show"><i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div></div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="container mt-3" style="padding-top:90px;"><div class="alert alert-danger alert-dismissible fade show"><i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["Error"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div></div>
+        }
+        @RenderBody()
+    </main>
+
+    <footer class="hms-footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand mb-2">HearMeStay</div>
+                    <p style="font-size:.85rem;max-width:280px;">AI — Hiểu bạn trước khi bạn đến.<br>Nền tảng đặt phòng cá nhân hóa hàng đầu.</p>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6>Khám phá</h6>
+                    <ul class="list-unstyled"><li class="mb-2"><a asp-controller="Accommodations" asp-action="Index">Nơi lưu trú</a></li><li class="mb-2"><a asp-controller="Home" asp-action="About">Cách hoạt động</a></li></ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6>Đối tác</h6>
+                    <ul class="list-unstyled"><li class="mb-2"><a asp-controller="Home" asp-action="BecomePartner">Trở thành đối tác</a></li><li class="mb-2"><a href="#">Đăng nhập đối tác</a></li></ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h6>Hỗ trợ</h6>
+                    <ul class="list-unstyled"><li class="mb-2"><i class="bi bi-envelope me-2"></i>contact@hearmestay.vn</li><li class="mb-2"><i class="bi bi-telephone me-2"></i>1900-XXXX</li></ul>
+                </div>
+            </div>
+            <hr class="my-4" />
+            <p class="text-center mb-0" style="font-size:.78rem;color:var(--white-30);">&copy; 2026 HearMeStay. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

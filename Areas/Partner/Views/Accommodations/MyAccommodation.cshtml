@@ -1,0 +1,23 @@
+@model HearMeStay.Models.Accommodation?
+@{ ViewData["Title"] = "Nơi lưu trú của tôi"; }
+<h2 class="fw-bold mb-4">Nơi lưu trú của tôi</h2>
+@if (Model == null)
+{
+    <p class="text-muted">Bạn chưa tạo nơi lưu trú nào.</p>
+    <a asp-action="Create" class="btn btn-primary">Tạo nơi lưu trú</a>
+}
+else
+{
+    <div class="card shadow-sm border-0 p-4" style="border-radius:16px;">
+        <h3 class="fw-bold">@Model.Name</h3>
+        <p class="text-muted"><i class="bi bi-geo-alt"></i> @Model.Address, @Model.City, @Model.Province</p>
+        <p>@Model.Description</p>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary"><i class="bi bi-pencil"></i> Sửa</a>
+        <hr/>
+        <form asp-action="UploadImages" method="post" enctype="multipart/form-data" class="d-flex gap-2">
+            <input type="hidden" name="accommodationId" value="@Model.Id" />
+            <input type="file" name="images" multiple class="form-control" accept=".jpg,.jpeg,.png,.webp" />
+            <button type="submit" class="btn btn-primary">Upload ảnh</button>
+        </form>
+    </div>
+}

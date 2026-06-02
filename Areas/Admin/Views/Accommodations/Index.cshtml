@@ -1,0 +1,17 @@
+@model List<HearMeStay.Models.Accommodation>
+@{ ViewData["Title"] = "Quản lý nơi lưu trú"; }
+<h2 class="fw-bold mb-4">Quản lý nơi lưu trú</h2>
+<table class="table table-hover bg-white rounded shadow-sm">
+    <thead class="table-light"><tr><th>Tên</th><th>Đối tác</th><th>Thành phố</th><th>Loại</th><th>Trạng thái</th><th>Hành động</th></tr></thead>
+    <tbody>
+    @foreach (var a in Model)
+    {
+        var st = a.Status switch { HearMeStay.Models.Enums.AccommodationStatus.Pending=>"⏳ Chờ duyệt", HearMeStay.Models.Enums.AccommodationStatus.Approved=>"✅ Đã duyệt", HearMeStay.Models.Enums.AccommodationStatus.Rejected=>"❌ Từ chối", HearMeStay.Models.Enums.AccommodationStatus.Hidden=>"🔒 Ẩn", _=>"" };
+        <tr><td><strong>@a.Name</strong></td><td>@a.Owner.FullName</td><td>@a.City</td><td>@a.AccommodationType</td><td>@st</td>
+        <td>
+            @if (a.Status == HearMeStay.Models.Enums.AccommodationStatus.Pending) { <form asp-action="Approve" asp-route-id="@a.Id" method="post" class="d-inline"><button class="btn btn-sm btn-success">Duyệt</button></form> <form asp-action="Reject" asp-route-id="@a.Id" method="post" class="d-inline ms-1"><button class="btn btn-sm btn-danger">Từ chối</button></form> }
+            @if (a.Status == HearMeStay.Models.Enums.AccommodationStatus.Approved) { <form asp-action="Hide" asp-route-id="@a.Id" method="post" class="d-inline"><button class="btn btn-sm btn-outline-secondary">Ẩn</button></form> }
+        </td></tr>
+    }
+    </tbody>
+</table>

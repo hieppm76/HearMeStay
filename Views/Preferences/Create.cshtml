@@ -1,0 +1,30 @@
+@model HearMeStay.ViewModels.GuestPreferenceCreateViewModel
+@{ ViewData["Title"] = "Chia sẻ nhu cầu cá nhân"; }
+<div style="padding-top:100px;"></div>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="text-center mb-4 fade-up">
+                <div class="hms-step-icon mx-auto mb-3" style="width:60px;height:60px;background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;"><i class="bi bi-chat-heart" style="font-size:1.3rem;"></i></div>
+                <h2 class="hms-section-title">Chia sẻ nhu cầu cá nhân của bạn</h2>
+                <p class="hms-section-sub">Thông tin này giúp nơi lưu trú chuẩn bị tốt hơn trước khi bạn đến.</p>
+                <p class="text-muted small">Đặt phòng <strong>#@Model.BookingCode</strong> — @Model.AccommodationName</p>
+            </div>
+            <form asp-action="Create" method="post">
+                <input type="hidden" asp-for="BookingId" />
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                <div class="hms-form-section fade-up"><div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#FEE2E2;color:#991B1B;">🍽️</div><h6 class="hms-form-section-title">Ăn uống & dị ứng</h6></div><div class="form-check mb-3"><input asp-for="HasFoodAllergy" class="form-check-input" /><label asp-for="HasFoodAllergy" class="form-check-label">Tôi có dị ứng thực phẩm</label></div><div class="mb-3"><label asp-for="FoodAllergyDetail" class="form-label">Chi tiết dị ứng</label><input asp-for="FoodAllergyDetail" class="form-control" placeholder="VD: Dị ứng hải sản, đậu phộng, gluten..." /></div><div><label asp-for="DietPreference" class="form-label">Chế độ ăn đặc biệt</label><input asp-for="DietPreference" class="form-control" placeholder="VD: Ăn chay, không thịt bò, Halal..." /></div></div>
+                <div class="hms-form-section fade-up"><div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#DBEAFE;color:#1E40AF;">🛏️</div><h6 class="hms-form-section-title">Thói quen phòng</h6></div><textarea asp-for="RoomPreference" class="form-control" rows="2" placeholder="VD: Phòng yên tĩnh, tầng cao, không mùi nồng, cần thêm gối..."></textarea></div>
+                <div class="hms-form-section fade-up"><div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#FCE7F3;color:#9D174D;">❤️</div><h6 class="hms-form-section-title">Sức khỏe & an toàn</h6></div><textarea asp-for="HealthNote" class="form-control" rows="2" placeholder="VD: Hen suyễn, cần thang máy, đi xe lăn..."></textarea></div>
+                <div class="hms-form-section fade-up"><div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#FEF3C7;color:#92400E;">🎉</div><h6 class="hms-form-section-title">Dịp đặc biệt</h6></div><div class="mb-3"><label asp-for="SpecialOccasion" class="form-label">Dịp gì?</label><input asp-for="SpecialOccasion" class="form-control" placeholder="VD: Sinh nhật, kỷ niệm ngày cưới, tuần trăng mật..." /></div><div><label asp-for="TravelPurpose" class="form-label">Mục đích chuyến đi</label><input asp-for="TravelPurpose" class="form-control" placeholder="VD: Nghỉ dưỡng, công tác, gia đình..." /></div></div>
+                <div class="hms-form-section fade-up"><div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#CFFAFE;color:#155E75;">🎯</div><h6 class="hms-form-section-title">Hoạt động & dịch vụ thêm</h6></div><div class="mb-3"><label asp-for="ActivityInterest" class="form-label">Hoạt động quan tâm</label><input asp-for="ActivityInterest" class="form-control" placeholder="VD: Spa, tour thuyền, BBQ, lặn biển..." /></div><div class="d-flex flex-column gap-2"><div class="form-check"><input asp-for="NeedAirportPickup" class="form-check-input" /><label asp-for="NeedAirportPickup" class="form-check-label">✈️ Cần đưa đón sân bay</label></div><div class="form-check"><input asp-for="NeedEarlyCheckIn" class="form-check-input" /><label asp-for="NeedEarlyCheckIn" class="form-check-label">⏰ Cần nhận phòng sớm</label></div><div class="form-check"><input asp-for="NeedDecoration" class="form-check-input" /><label asp-for="NeedDecoration" class="form-check-label">🎊 Cần trang trí phòng</label></div></div></div>
+                <div class="hms-form-section fade-up"><div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#F3E8FF;color:#6B21A8;">📝</div><h6 class="hms-form-section-title">Ghi chú tự do</h6></div><textarea asp-for="RawText" class="form-control" rows="3" placeholder="Ví dụ: Mình ăn chay, không thích mùi tinh dầu, muốn phòng yên tĩnh và đi kỷ niệm 2 năm."></textarea></div>
+                <div class="hms-form-section fade-up" style="background:var(--teal-pale);border-color:rgba(13,148,136,.2);">
+                    <div class="form-check"><input asp-for="ConsentToShareWithHotel" class="form-check-input" /><label asp-for="ConsentToShareWithHotel" class="form-check-label fw-bold">Tôi đồng ý chia sẻ thông tin này với nơi lưu trú để họ chuẩn bị dịch vụ phù hợp.</label><span asp-validation-for="ConsentToShareWithHotel" class="text-danger d-block small"></span></div>
+                </div>
+                <div class="d-flex gap-2 mt-3 fade-up"><button type="submit" class="btn btn-primary btn-lg flex-grow-1"><i class="bi bi-send me-1"></i>Gửi thông tin cho nơi lưu trú</button><a asp-controller="Bookings" asp-action="MyBookings" class="btn btn-outline-secondary btn-lg">Bỏ qua</a></div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts{<partial name="_ValidationScriptsPartial" />}

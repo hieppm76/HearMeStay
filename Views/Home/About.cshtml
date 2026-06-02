@@ -1,0 +1,43 @@
+@{ ViewData["Title"] = "Cách hoạt động"; }
+
+<!-- Hero -->
+<section class="hms-hero" style="min-height:50vh;padding:4rem 0 3rem;background:linear-gradient(135deg,var(--navy-deep),var(--navy));">
+    <div class="container text-center position-relative" style="z-index:2;">
+        <span class="badge" style="background:var(--teal-pale);color:var(--teal);padding:.5rem 1rem;font-size:.85rem;border-radius:var(--r-full);margin-bottom:1rem;">Khám phá HearMeStay</span>
+        <h1 class="mb-3 text-white char-animate" style="font-size:2.5rem;">Cá nhân hóa mọi chuyến đi</h1>
+        <p class="hero-sub mb-0 fade-up" style="margin:0 auto;">HearMeStay kết nối bạn với những nơi lưu trú hiểu rõ bạn trước khi bạn đến.</p>
+    </div>
+</section>
+
+<!-- Content -->
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="hms-form-section fade-up mb-5" style="padding:2.5rem;">
+                <h3 class="fw-bold mb-4">Câu chuyện của chúng tôi</h3>
+                <p class="text-muted" style="line-height:1.8;">Bạn đã bao giờ đến một khách sạn sang trọng, nhưng họ lại không biết bạn bị dị ứng đậu phộng? Hoặc bạn đi tuần trăng mật nhưng lại được xếp vào một căn phòng ồn ào gần thang máy?</p>
+                <p class="text-muted" style="line-height:1.8;"><strong>HearMeStay</strong> ra đời để giải quyết vấn đề đó. Bằng việc kết hợp công nghệ AI và form nhu cầu cá nhân chuyên sâu, chúng tôi giúp thông tin của bạn được truyền tải đến <strong>đúng bộ phận</strong> (Lễ tân, Bếp, Buồng phòng) trước khi bạn nhận phòng.</p>
+            </div>
+
+            <h3 class="fw-bold text-center mb-4 fade-up">Quy trình 3 bước</h3>
+            <div class="d-flex flex-column gap-4 mb-5">
+                <div class="d-flex gap-4 fade-up align-items-center p-4" style="background:#fff;border-radius:var(--r-lg);border:1px solid var(--border-light);">
+                    <div style="width:64px;height:64px;border-radius:50%;background:var(--teal-pale);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;">1</div>
+                    <div><h5 class="fw-bold mb-2">Đặt phòng như bình thường</h5><p class="text-muted small mb-0">Tìm kiếm và đặt nơi lưu trú yêu thích trên nền tảng của chúng tôi với giao diện trực quan, rõ ràng.</p></div>
+                </div>
+                <div class="d-flex gap-4 fade-up align-items-center p-4" style="background:#fff;border-radius:var(--r-lg);border:1px solid var(--border-light);">
+                    <div style="width:64px;height:64px;border-radius:50%;background:#FEF3C7;color:#92400E;display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;">2</div>
+                    <div><h5 class="fw-bold mb-2">Chia sẻ nhu cầu (Tùy chọn)</h5><p class="text-muted small mb-0">Sau khi đặt phòng, bạn điền form ngắn gọn về dị ứng, thói quen, dịp đặc biệt. AI của chúng tôi sẽ phân tích và gắn tag tự động.</p></div>
+                </div>
+                <div class="d-flex gap-4 fade-up align-items-center p-4" style="background:#fff;border-radius:var(--r-lg);border:1px solid var(--border-light);">
+                    <div style="width:64px;height:64px;border-radius:50%;background:#DBEAFE;color:#1E40AF;display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;">3</div>
+                    <div><h5 class="fw-bold mb-2">Trải nghiệm sự thấu hiểu</h5><p class="text-muted small mb-0">Khách sạn nhận được Insight và chuẩn bị mọi thứ sẵn sàng. Bạn chỉ cần đến và tận hưởng kỳ nghỉ.</p></div>
+                </div>
+            </div>
+
+            <div class="text-center fade-up">
+                <a asp-controller="Accommodations" asp-action="Index" class="btn btn-primary btn-lg px-5">Bắt đầu đặt phòng ngay</a>
+            </div>
+        </div>
+    </div>
+</div>

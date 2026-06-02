@@ -1,0 +1,61 @@
+@model HearMeStay.Models.Booking
+@{ ViewData["Title"] = "Chi tiết đặt phòng"; }
+<div style="padding-top:100px;"></div>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4 fade-up">
+                <h2 class="hms-section-title mb-0">Chi tiết đặt phòng #@Model.BookingCode</h2>
+                <a asp-action="MyBookings" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>Quay lại</a>
+            </div>
+
+            <div class="hms-form-section p-4 fade-up mb-4">
+                <div class="row border-bottom pb-4 mb-4">
+                    <div class="col-md-8">
+                        <h5 class="fw-bold mb-1">@Model.Accommodation.Name</h5>
+                        <p class="text-muted small mb-0"><i class="bi bi-geo-alt me-1"></i>@Model.Accommodation.Address, @Model.Accommodation.City</p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        @{ var st = Model.BookingStatus switch { HearMeStay.Models.Enums.BookingStatus.Pending=>"Chờ xác nhận", HearMeStay.Models.Enums.BookingStatus.Confirmed=>"Đã xác nhận", HearMeStay.Models.Enums.BookingStatus.Rejected=>"Bị từ chối", HearMeStay.Models.Enums.BookingStatus.Cancelled=>"Đã hủy", HearMeStay.Models.Enums.BookingStatus.Completed=>"Đã hoàn tất", _=>"" };
+                           var bg = Model.BookingStatus switch { HearMeStay.Models.Enums.BookingStatus.Pending=>"badge-pending", HearMeStay.Models.Enums.BookingStatus.Confirmed=>"badge-confirmed", HearMeStay.Models.Enums.BookingStatus.Rejected=>"badge-rejected", HearMeStay.Models.Enums.BookingStatus.Cancelled=>"badge-cancelled", HearMeStay.Models.Enums.BookingStatus.Completed=>"badge-completed", _=>"" }; }
+                        <span class="badge badge-status @bg px-3 py-2">@st</span>
+                    </div>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6"><small class="text-muted d-block mb-1">Nhận phòng</small><strong class="fs-5">@Model.CheckInDate.ToString("dd/MM/yyyy")</strong><br><span class="text-muted small">Từ @Model.Accommodation.CheckInTime.ToString(@"hh\:mm")</span></div>
+                    <div class="col-md-6"><small class="text-muted d-block mb-1">Trả phòng</small><strong class="fs-5">@Model.CheckOutDate.ToString("dd/MM/yyyy")</strong><br><span class="text-muted small">Trước @Model.Accommodation.CheckOutTime.ToString(@"hh\:mm")</span></div>
+                </div>
+
+                <div class="row g-4 mb-4 pb-4 border-bottom">
+                    <div class="col-md-4"><small class="text-muted d-block mb-1">Loại phòng</small><strong>@Model.RoomType.Name</strong></div>
+                    <div class="col-md-4"><small class="text-muted d-block mb-1">Khách & Phòng</small><strong>@Model.NumberOfGuests khách, @Model.NumberOfRooms phòng</strong></div>
+                    <div class="col-md-4"><small class="text-muted d-block mb-1">Tổng tiền</small><strong class="hms-price fs-5">@Model.TotalAmount.ToString("N0")₫</strong></div>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2">
+                    @if (Model.BookingStatus == HearMeStay.Models.Enums.BookingStatus.Confirmed && Model.GuestPreference == null)
+                    {
+                        <a asp-controller="Preferences" asp-action="Create" asp-route-bookingId="@Model.Id" class="btn btn-primary"><i class="bi bi-chat-heart me-1"></i>Chia sẻ nhu cầu cá nhân</a>
+                    }
+                    else if (Model.GuestPreference != null)
+                    {
+                        <span class="btn btn-glass bg-light text-success border-success cursor-default"><i class="bi bi-check-circle me-1"></i>Đã gửi nhu cầu cá nhân</span>
+                    }
+
+                    @if (Model.BookingStatus == HearMeStay.Models.Enums.BookingStatus.Completed && Model.Review == null)
+                    {
+                        <a asp-controller="Reviews" asp-action="Create" asp-route-bookingId="@Model.Id" class="btn btn-warning"><i class="bi bi-star me-1"></i>Đánh giá trải nghiệm</a>
+                    }
+
+                    @if (Model.BookingStatus == HearMeStay.Models.Enums.BookingStatus.Pending || Model.BookingStatus == HearMeStay.Models.Enums.BookingStatus.Confirmed)
+                    {
+                        <form asp-action="Cancel" asp-route-id="@Model.Id" method="post" class="d-inline ms-auto" onsubmit="return confirm('Bạn có chắc muốn hủy đặt phòng này?');">
+                            <button type="submit" class="btn btn-outline-danger"><i class="bi bi-x-lg me-1"></i>Hủy đặt phòng</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

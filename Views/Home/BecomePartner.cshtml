@@ -1,0 +1,86 @@
+@{ ViewData["Title"] = "Trở thành đối tác"; }
+
+<!-- Hero -->
+<section class="hms-hero" style="padding:4rem 0 3rem;">
+    <div class="container text-center position-relative" style="z-index:2;">
+        <span class="hero-badge"><i class="bi bi-handshake"></i> Đối tác HearMeStay</span>
+        <h1 class="mb-3" style="font-size:2.2rem;">Nâng tầm dịch vụ với <span class="text-gradient">AI cá nhân hóa</span></h1>
+        <p class="hero-sub mb-0">Tham gia HearMeStay để hiểu khách hàng trước khi họ đến — tăng sự hài lòng, tăng doanh thu.</p>
+    </div>
+</section>
+
+<div class="container py-5">
+    <!-- Benefits -->
+    <div class="text-center mb-5">
+        <h2 class="section-title section-title-center fw-bold">Lợi ích khi trở thành đối tác</h2>
+    </div>
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="hms-step-card h-100">
+                <div class="hms-icon-circle"><i class="bi bi-cpu"></i></div>
+                <h5 class="fw-bold mb-2">AI phân tích nhu cầu</h5>
+                <p class="text-muted small mb-0">Hệ thống AI tự động bóc tách dị ứng, sở thích, dịp đặc biệt và gửi thông tin đến đúng bộ phận.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="hms-step-card h-100">
+                <div class="hms-icon-circle"><i class="bi bi-graph-up-arrow"></i></div>
+                <h5 class="fw-bold mb-2">Tăng doanh thu</h5>
+                <p class="text-muted small mb-0">AI gợi ý dịch vụ bán chéo (upsell) phù hợp từng khách, giúp tăng doanh thu mỗi booking.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="hms-step-card h-100">
+                <div class="hms-icon-circle"><i class="bi bi-star"></i></div>
+                <h5 class="fw-bold mb-2">Nâng cao đánh giá</h5>
+                <p class="text-muted small mb-0">Cá nhân hóa trải nghiệm giúp khách hài lòng hơn, tăng điểm review trên nền tảng.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- How to become a partner -->
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="hms-form-section" style="padding:2rem;">
+                <div class="text-center mb-4">
+                    <div class="hms-icon-circle mx-auto mb-3" style="width:56px;height:56px;background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;">
+                        <i class="bi bi-buildings" style="font-size:1.3rem;"></i>
+                    </div>
+                    <h4 class="fw-bold">Quy trình đăng ký đối tác</h4>
+                    <p class="text-muted small">Chỉ 3 bước đơn giản để bắt đầu</p>
+                </div>
+
+                <div class="d-flex gap-3 mb-3 p-3" style="background:var(--bg);border-radius:var(--radius);">
+                    <div style="width:36px;height:36px;border-radius:50%;background:var(--teal-pale);color:var(--teal);display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">1</div>
+                    <div>
+                        <strong>Đăng ký tài khoản</strong>
+                        <p class="text-muted small mb-0">Tạo tài khoản miễn phí trên HearMeStay với vai trò khách du lịch.</p>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 mb-3 p-3" style="background:var(--bg);border-radius:var(--radius);">
+                    <div style="width:36px;height:36px;border-radius:50%;background:var(--teal-pale);color:var(--teal);display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">2</div>
+                    <div>
+                        <strong>Gửi yêu cầu hợp tác</strong>
+                        <p class="text-muted small mb-0">Liên hệ đội ngũ HearMeStay qua email <a href="mailto:contact@hearmestay.vn" class="fw-bold">contact@hearmestay.vn</a> kèm thông tin nơi lưu trú của bạn.</p>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 mb-4 p-3" style="background:var(--bg);border-radius:var(--radius);">
+                    <div style="width:36px;height:36px;border-radius:50%;background:var(--teal-pale);color:var(--teal);display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">3</div>
+                    <div>
+                        <strong>Được duyệt & bắt đầu</strong>
+                        <p class="text-muted small mb-0">Đội ngũ sẽ xác minh và nâng cấp tài khoản thành Đối tác. Bạn sẽ có quyền truy cập dashboard quản lý.</p>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg px-4">
+                        <i class="bi bi-person-plus me-1"></i> Đăng ký tài khoản ngay
+                    </a>
+                    <p class="text-muted small mt-3 mb-0">Đã có tài khoản? Hãy gửi email đến <strong>contact@hearmestay.vn</strong> để được nâng cấp.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

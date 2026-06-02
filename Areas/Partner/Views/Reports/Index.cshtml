@@ -1,0 +1,23 @@
+@{ ViewData["Title"] = "Báo cáo"; }
+<h2 class="fw-bold mb-4">Báo cáo</h2>
+<div class="row g-4 mb-4">
+    <div class="col-md-3"><div class="card hms-stat-card p-3"><div class="text-muted small">Tổng booking</div><div class="fs-4 fw-bold">@ViewBag.TotalBookings</div></div></div>
+    <div class="col-md-3"><div class="card hms-stat-card p-3"><div class="text-muted small">Doanh thu dự kiến</div><div class="fs-4 fw-bold hms-price">@(ViewBag.Revenue != null ? ((decimal)ViewBag.Revenue).ToString("N0") : "0")₫</div></div></div>
+    <div class="col-md-3"><div class="card hms-stat-card p-3"><div class="text-muted small">Hoa hồng dự kiến</div><div class="fs-4 fw-bold">@(ViewBag.Commission != null ? ((decimal)ViewBag.Commission).ToString("N0") : "0")₫</div></div></div>
+    <div class="col-md-3"><div class="card hms-stat-card p-3"><div class="text-muted small">Tỷ lệ xác nhận</div><div class="fs-4 fw-bold">@(ViewBag.ConfirmedRate != null ? ((double)ViewBag.ConfirmedRate).ToString("F0") : "0")%</div></div></div>
+</div>
+<div class="row g-4">
+    <div class="col-md-4"><div class="card hms-stat-card p-3"><div class="text-muted small">Tỷ lệ điền form cá nhân hóa</div><div class="fs-4 fw-bold">@(ViewBag.PreferenceRate != null ? ((double)ViewBag.PreferenceRate).ToString("F0") : "0")%</div></div></div>
+    <div class="col-md-4"><div class="card hms-stat-card p-3"><div class="text-muted small">Đánh giá trung bình</div><div class="fs-4 fw-bold"><i class="bi bi-star-fill text-warning"></i> @(ViewBag.AvgRating != null ? ((double)ViewBag.AvgRating).ToString("F1") : "0")/5</div></div></div>
+    <div class="col-md-4"><div class="card hms-stat-card p-3"><div class="text-muted small">Điểm cá nhân hóa</div><div class="fs-4 fw-bold"><i class="bi bi-heart-fill text-danger"></i> @(ViewBag.AvgPersonalization != null ? ((double)ViewBag.AvgPersonalization).ToString("F1") : "0")/5</div></div></div>
+</div>
+@if (ViewBag.CommonTags != null)
+{
+    <h4 class="fw-bold mt-5 mb-3">Các tag phổ biến</h4>
+    <div class="d-flex flex-wrap gap-2">
+    @foreach (var kv in (Dictionary<string,int>)ViewBag.CommonTags)
+    {
+        <span class="badge hms-badge-ai px-3 py-2">@kv.Key (@kv.Value)</span>
+    }
+    </div>
+}

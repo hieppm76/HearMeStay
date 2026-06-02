@@ -1,0 +1,22 @@
+@model HearMeStay.Models.Accommodation
+@{ ViewData["Title"] = "Tạo nơi lưu trú"; }
+<h2 class="fw-bold mb-4">Tạo nơi lưu trú mới</h2>
+<div class="card shadow-sm border-0 p-4" style="border-radius:16px;">
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+    <div class="row g-3">
+        <div class="col-md-6"><label asp-for="Name" class="form-label"></label><input asp-for="Name" class="form-control" /><span asp-validation-for="Name" class="text-danger"></span></div>
+        <div class="col-md-6"><label asp-for="AccommodationType" class="form-label"></label><select asp-for="AccommodationType" class="form-select"><option value="Hotel">Khách sạn</option><option value="Homestay">Homestay</option><option value="Villa">Villa</option><option value="Resort">Resort</option><option value="Apartment">Căn hộ</option></select></div>
+        <div class="col-12"><label asp-for="Description" class="form-label"></label><textarea asp-for="Description" class="form-control" rows="3"></textarea></div>
+        <div class="col-md-4"><label asp-for="Address" class="form-label"></label><input asp-for="Address" class="form-control" /></div>
+        <div class="col-md-4"><label asp-for="City" class="form-label"></label><input asp-for="City" class="form-control" /></div>
+        <div class="col-md-4"><label asp-for="Province" class="form-label"></label><input asp-for="Province" class="form-control" /></div>
+        <div class="col-md-3"><label asp-for="Phone" class="form-label"></label><input asp-for="Phone" class="form-control" /></div>
+        <div class="col-md-3"><label asp-for="Email" class="form-label"></label><input asp-for="Email" class="form-control" /></div>
+        <div class="col-md-3"><label asp-for="StarRating" class="form-label"></label><input asp-for="StarRating" class="form-control" type="number" min="1" max="5" /></div>
+        <div class="col-md-3"><label class="form-label">Ảnh chính</label><input type="file" name="mainImage" class="form-control" accept=".jpg,.jpeg,.png,.webp" /></div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Tạo nơi lưu trú</button>
+</form>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

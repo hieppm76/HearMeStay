@@ -1,0 +1,51 @@
+@model HearMeStay.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="text-center mb-4">
+                <div class="hms-icon-circle mx-auto mb-3" style="width:56px;height:56px;">
+                    <i class="bi bi-box-arrow-in-right" style="font-size:1.3rem;"></i>
+                </div>
+                <h2 class="fw-bold">Đăng nhập</h2>
+                <p class="text-muted">Chào mừng bạn quay lại HearMeStay</p>
+            </div>
+
+            <div class="hms-form-section" style="padding:2rem;">
+                <form asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" placeholder="Nhập email của bạn" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" class="form-control" placeholder="Nhập mật khẩu" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4 form-check">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label"></label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">Đăng nhập</button>
+
+                    <div class="text-center">
+                        <p class="mb-0 small">Chưa có tài khoản? <a asp-action="Register" class="fw-bold">Đăng ký ngay</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

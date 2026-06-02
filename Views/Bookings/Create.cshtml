@@ -1,0 +1,43 @@
+@model HearMeStay.ViewModels.BookingCreateViewModel
+@{ ViewData["Title"] = "Đặt phòng"; }
+<div style="padding-top:100px;"></div>
+<div class="container py-4">
+    <div class="row g-4">
+        <!-- Form -->
+        <div class="col-lg-7">
+            <div class="mb-4 fade-up"><h2 class="hms-section-title">Đặt phòng</h2><p class="hms-section-sub">Điền thông tin để gửi yêu cầu đặt phòng.</p></div>
+            <form asp-action="Create" method="post">
+                <input type="hidden" asp-for="AccommodationId" /><input type="hidden" asp-for="RoomTypeId" />
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                <div class="hms-form-section fade-up">
+                    <div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:var(--teal-pale);color:var(--teal);"><i class="bi bi-person"></i></div><h6 class="hms-form-section-title">Thông tin khách hàng</h6></div>
+                    <div class="mb-3"><label asp-for="GuestFullName" class="form-label">Họ và tên</label><input asp-for="GuestFullName" class="form-control" placeholder="Nhập họ và tên" /><span asp-validation-for="GuestFullName" class="text-danger small"></span></div>
+                    <div class="row g-3"><div class="col-md-6"><label asp-for="GuestEmail" class="form-label">Email</label><input asp-for="GuestEmail" class="form-control" placeholder="email@example.com" /><span asp-validation-for="GuestEmail" class="text-danger small"></span></div><div class="col-md-6"><label asp-for="GuestPhone" class="form-label">Số điện thoại</label><input asp-for="GuestPhone" class="form-control" placeholder="0912 345 678" /><span asp-validation-for="GuestPhone" class="text-danger small"></span></div></div>
+                </div>
+                <div class="hms-form-section fade-up">
+                    <div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#DBEAFE;color:#1E40AF;"><i class="bi bi-calendar3"></i></div><h6 class="hms-form-section-title">Chi tiết đặt phòng</h6></div>
+                    <div class="row g-3"><div class="col-md-6"><label asp-for="CheckInDate" class="form-label">Ngày nhận phòng</label><input asp-for="CheckInDate" class="form-control" type="date" /><span asp-validation-for="CheckInDate" class="text-danger small"></span></div><div class="col-md-6"><label asp-for="CheckOutDate" class="form-label">Ngày trả phòng</label><input asp-for="CheckOutDate" class="form-control" type="date" /><span asp-validation-for="CheckOutDate" class="text-danger small"></span></div><div class="col-md-6"><label asp-for="NumberOfGuests" class="form-label">Số khách</label><input asp-for="NumberOfGuests" class="form-control" type="number" min="1" /><span asp-validation-for="NumberOfGuests" class="text-danger small"></span></div><div class="col-md-6"><label asp-for="NumberOfRooms" class="form-label">Số phòng</label><input asp-for="NumberOfRooms" class="form-control" type="number" min="1" /><span asp-validation-for="NumberOfRooms" class="text-danger small"></span></div></div>
+                </div>
+                <div class="hms-form-section fade-up">
+                    <div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#FEF3C7;color:#92400E;"><i class="bi bi-pencil"></i></div><h6 class="hms-form-section-title">Ghi chú & thanh toán</h6></div>
+                    <div class="mb-3"><textarea asp-for="GuestNote" class="form-control" rows="3" placeholder="Ghi chú thêm cho nơi lưu trú..."></textarea></div>
+                    <div class="p-3" style="background:var(--bg-page);border-radius:var(--r);font-size:.85rem;"><i class="bi bi-credit-card me-2" style="color:var(--teal);"></i><strong>Hình thức thanh toán:</strong> Thanh toán tại nơi lưu trú</div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg w-100 mt-2 fade-up"><i class="bi bi-check-lg me-1"></i>Gửi yêu cầu đặt phòng</button>
+            </form>
+        </div>
+        <!-- Sidebar -->
+        <div class="col-lg-5 fade-up">
+            <div class="hms-booking-summary">
+                <h6 class="fw-bold mb-3" style="font-size:.95rem;">Tóm tắt đặt phòng</h6>
+                <div class="mb-3 pb-3" style="border-bottom:1px solid var(--border-light);">
+                    <strong>@Model.AccommodationName</strong><br><span class="text-muted small">@Model.RoomTypeName</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2"><span class="text-muted small">Giá mỗi đêm</span><span class="fw-bold">@Model.PricePerNight.ToString("N0")₫</span></div>
+                <div class="d-flex justify-content-between mb-3"><span class="text-muted small">Trạng thái</span><span class="badge badge-status badge-pending">Chờ xác nhận</span></div>
+                <div class="p-3" style="background:var(--teal-pale);border-radius:var(--r);font-size:.82rem;color:var(--teal);"><i class="bi bi-lightbulb me-1"></i>Sau khi đặt phòng, bạn có thể chia sẻ nhu cầu cá nhân để nơi lưu trú chuẩn bị tốt hơn.</div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{<partial name="_ValidationScriptsPartial" />}

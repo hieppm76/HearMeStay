@@ -1,0 +1,113 @@
+@model List<HearMeStay.Models.ApplicationUser>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<HearMeStay.Models.ApplicationUser> UserManager
+@{ ViewData["Title"] = "Quản lý người dùng"; }
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <p class="text-muted mb-0">Tổng cộng <strong>@Model.Count</strong> người dùng</p>
+    </div>
+</div>
+
+<div class="hms-table">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Người dùng</th>
+                <th>Email</th>
+                <th>Vai trò</th>
+                <th>Ngày tạo</th>
+                <th>Trạng thái</th>
+                <th style="width:280px;">Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var u in Model)
+        {
+            var roles = await UserManager.GetRolesAsync(u);
+            var roleName = roles.FirstOrDefault() ?? "N/A";
+            var isAdmin = roles.Contains("Admin");
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center gap-2">
+                        <div style="width:32px;height:32px;border-radius:50%;background:var(--teal-pale);color:var(--teal);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;">
+                            @u.FullName.Substring(0, 1).ToUpper()
+                        </div>
+                        <strong>@u.FullName</strong>
+                    </div>
+                </td>
+                <td class="text-muted">@u.Email</td>
+                <td>
+                    @if (isAdmin)
+                    {
+                        <span class="badge badge-status" style="background:#FEE2E2;color:#991B1B;">Admin</span>
+                    }
+                    else if (roles.Contains("HotelPartner"))
+                    {
+                        <span class="badge badge-status badge-confirmed">Đối tác</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-status" style="background:#DBEAFE;color:#1E40AF;">Khách</span>
+                    }
+                </td>
+                <td class="text-muted small">@u.CreatedAt.ToString("dd/MM/yyyy")</td>
+                <td>
+                    @if (u.IsActive)
+                    {
+                        <span class="badge badge-status badge-confirmed">Hoạt động</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-status badge-rejected">Bị khóa</span>
+                    }
+                </td>
+                <td>
+                    @if (!isAdmin)
+                    {
+                        <div class="d-flex gap-1 flex-wrap">
+                            @* Lock / Unlock *@
+                            @if (u.IsActive)
+                            {
+                                <form asp-action="Lock" asp-route-id="@u.Id" method="post" class="d-inline">
+                                    <button class="btn btn-sm btn-outline-danger" title="Khóa tài khoản"><i class="bi bi-lock"></i></button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-action="Unlock" asp-route-id="@u.Id" method="post" class="d-inline">
+                                    <button class="btn btn-sm btn-outline-success" title="Mở khóa"><i class="bi bi-unlock"></i></button>
+                                </form>
+                            }
+
+                            @* Promote / Demote *@
+                            @if (roles.Contains("Traveler"))
+                            {
+                                <form asp-action="PromoteToPartner" asp-route-id="@u.Id" method="post" class="d-inline" 
+                                      onsubmit="return confirm('Nâng cấp @u.FullName thành Đối tác?');">
+                                    <button class="btn btn-sm btn-outline-primary" title="Nâng cấp thành Đối tác">
+                                        <i class="bi bi-arrow-up-circle me-1"></i>Đối tác
+                                    </button>
+                                </form>
+                            }
+                            @if (roles.Contains("HotelPartner"))
+                            {
+                                <form asp-action="DemoteToTraveler" asp-route-id="@u.Id" method="post" class="d-inline"
+                                      onsubmit="return confirm('Hạ cấp @u.FullName về Khách du lịch?');">
+                                    <button class="btn btn-sm btn-outline-warning" title="Hạ cấp về Khách">
+                                        <i class="bi bi-arrow-down-circle me-1"></i>Hạ cấp
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <span class="text-muted small">—</span>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
