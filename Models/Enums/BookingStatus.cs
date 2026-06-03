@@ -6,6 +6,9 @@ namespace HearMeStay.Models.Enums
         Confirmed,
         Rejected,
         Cancelled,
-        Completed
+        Completed,
+        PaymentPending,
+        PaymentVerificationPending,
+        PaymentExpired
     }
 }

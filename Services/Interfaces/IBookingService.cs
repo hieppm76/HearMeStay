@@ -6,6 +6,8 @@ namespace HearMeStay.Services.Interfaces
     {
         Task<Booking> CreateBookingAsync(Booking booking);
         Task<Booking?> ConfirmBookingAsync(int bookingId, string? partnerNote = null);
+        Task<Booking?> SubmitPaymentProofAsync(int bookingId, string transferContent, string? proofImageUrl = null);
+        Task<Booking?> VerifyPaymentAsync(int bookingId, string adminOrPartnerName);
         Task<Booking?> RejectBookingAsync(int bookingId, string? partnerNote = null);
         Task<Booking?> CancelBookingAsync(int bookingId);
         Task<Booking?> MarkCompletedAsync(int bookingId);

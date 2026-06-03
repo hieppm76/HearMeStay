@@ -12,11 +12,39 @@
             <div class="hms-form-section fade-up">
                 <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
                     <div><h5 class="fw-bold mb-1" style="font-size:1rem;">@b.Accommodation.Name</h5><p class="text-muted small mb-1">@b.RoomType.Name · Mã: <code>@b.BookingCode</code></p><p class="small mb-1"><i class="bi bi-calendar me-1"></i>@b.CheckInDate.ToString("dd/MM/yyyy") → @b.CheckOutDate.ToString("dd/MM/yyyy") · @b.NumberOfRooms phòng · @b.NumberOfGuests khách</p><p class="hms-price fw-bold mb-0">@b.TotalAmount.ToString("N0")₫</p></div>
-                    <div class="text-end"><span class="badge badge-status @statusClass mb-2">@statusText</span>
-                        @if(b.GuestPreference!=null){<div><span class="badge hms-badge hms-badge-ai">✅ Đã gửi nhu cầu</span></div>}
+                    <div class="text-end">
+                        <span class="badge badge-status @statusClass mb-2">@statusText</span>
+                        
+                        @if(b.GuestPreference != null)
+                        {
+                            var srText = b.GuestPreference.SpecialRequestStatus switch { 
+                                HearMeStay.Models.Enums.SpecialRequestStatus.Pending => "Đang xử lý nhu cầu",
+                                HearMeStay.Models.Enums.SpecialRequestStatus.CanSupport => "Có thể hỗ trợ nhu cầu",
+                                HearMeStay.Models.Enums.SpecialRequestStatus.PartialSupport => "Hỗ trợ nhu cầu một phần",
+                                HearMeStay.Models.Enums.SpecialRequestStatus.CannotSupport => "Không thể hỗ trợ nhu cầu",
+                                HearMeStay.Models.Enums.SpecialRequestStatus.NeedMoreInfo => "Cần thêm thông tin nhu cầu",
+                                _ => ""
+                            };
+                            var srClass = b.GuestPreference.SpecialRequestStatus switch { 
+                                HearMeStay.Models.Enums.SpecialRequestStatus.Pending => "bg-secondary text-white",
+                                HearMeStay.Models.Enums.SpecialRequestStatus.CanSupport => "bg-success text-white",
+                                HearMeStay.Models.Enums.SpecialRequestStatus.PartialSupport => "bg-warning text-dark",
+                                HearMeStay.Models.Enums.SpecialRequestStatus.CannotSupport => "bg-danger text-white",
+                                HearMeStay.Models.Enums.SpecialRequestStatus.NeedMoreInfo => "bg-info text-dark",
+                                _ => ""
+                            };
+                            <div><span class="badge @srClass mb-1">@srText</span></div>
+                            @if (!string.IsNullOrEmpty(b.GuestPreference.PartnerSpecialRequestNote))
+                            {
+                                <div class="text-muted small mb-2 text-wrap text-break" style="max-width: 250px;">
+                                    <strong>Phản hồi:</strong> @b.GuestPreference.PartnerSpecialRequestNote
+                                </div>
+                            }
+                        }
+
                         <div class="mt-2 d-flex gap-1 justify-content-end flex-wrap">
                             <a asp-action="Details" asp-route-id="@b.Id" class="btn btn-sm btn-outline-primary">Chi tiết</a>
-                            @if(b.BookingStatus==HearMeStay.Models.Enums.BookingStatus.Confirmed && b.GuestPreference==null){<a asp-controller="Preferences" asp-action="Create" asp-route-bookingId="@b.Id" class="btn btn-sm btn-primary">Chia sẻ nhu cầu</a>}
+                            @if((b.BookingStatus==HearMeStay.Models.Enums.BookingStatus.Confirmed || b.BookingStatus==HearMeStay.Models.Enums.BookingStatus.Pending) && b.GuestPreference==null){<a asp-controller="Preferences" asp-action="Create" asp-route-bookingId="@b.Id" class="btn btn-sm btn-primary">Chia sẻ nhu cầu</a>}
                             @if(b.BookingStatus==HearMeStay.Models.Enums.BookingStatus.Completed && b.Review==null){<a asp-controller="Reviews" asp-action="Create" asp-route-bookingId="@b.Id" class="btn btn-sm btn-primary">Đánh giá trải nghiệm</a>}
                         </div>
                     </div>

@@ -1,26 +1,146 @@
 @model HearMeStay.Models.Booking
-@{ ViewData["Title"] = "Chi tiết đặt phòng"; }
-<h2 class="fw-bold mb-4">Chi tiết đặt phòng #@Model.BookingCode</h2>
-<div class="card shadow-sm border-0 p-4 mb-4" style="border-radius:16px;">
-    <div class="row">
-        <div class="col-md-6">
-            <h5 class="fw-bold">Thông tin khách</h5>
-            <p><strong>Họ tên:</strong> @Model.GuestFullName</p>
-            <p><strong>Email:</strong> @Model.GuestEmail</p>
-            <p><strong>SĐT:</strong> @Model.GuestPhone</p>
-            @if (!string.IsNullOrEmpty(Model.GuestNote)) { <p><strong>Ghi chú:</strong> @Model.GuestNote</p> }
-        </div>
-        <div class="col-md-6">
-            <h5 class="fw-bold">Thông tin đặt phòng</h5>
-            <p><strong>Phòng:</strong> @Model.RoomType.Name</p>
-            <p><strong>Check-in:</strong> @Model.CheckInDate.ToString("dd/MM/yyyy") | <strong>Check-out:</strong> @Model.CheckOutDate.ToString("dd/MM/yyyy")</p>
-            <p><strong>Số khách:</strong> @Model.NumberOfGuests | <strong>Số phòng:</strong> @Model.NumberOfRooms</p>
-            <p><strong>Tổng tiền:</strong> <span class="fw-bold hms-price">@Model.TotalAmount.ToString("N0")₫</span></p>
+@{ ViewData["Title"] = "Chi tiết đặt phòng & AI Insight"; }
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="hms-section-title mb-0">Booking #@Model.BookingCode</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>Quay lại</a>
+</div>
+
+<div class="row g-4">
+    <!-- Cột trái: Thông tin Booking & Khách -->
+    <div class="col-lg-5">
+        <div class="hms-form-section p-4 h-100">
+            <h5 class="fw-bold mb-3 border-bottom pb-2"><i class="bi bi-person me-2" style="color:var(--teal);"></i>Thông tin khách</h5>
+            <p class="mb-1"><strong>Họ tên:</strong> @Model.GuestFullName</p>
+            <p class="mb-1"><strong>Email:</strong> @Model.GuestEmail</p>
+            <p class="mb-1"><strong>SĐT:</strong> @Model.GuestPhone</p>
+            
+            <h5 class="fw-bold mb-3 mt-4 border-bottom pb-2"><i class="bi bi-door-open me-2" style="color:var(--teal);"></i>Chi tiết đặt phòng</h5>
+            <p class="mb-1"><strong>Loại phòng:</strong> @Model.RoomType.Name</p>
+            <p class="mb-1"><strong>Nhận phòng:</strong> @Model.CheckInDate.ToString("dd/MM/yyyy")</p>
+            <p class="mb-1"><strong>Trả phòng:</strong> @Model.CheckOutDate.ToString("dd/MM/yyyy")</p>
+            <p class="mb-1"><strong>Quy mô:</strong> @Model.NumberOfGuests khách · @Model.NumberOfRooms phòng</p>
+            <p class="mb-1"><strong>Tổng tiền:</strong> <span class="fw-bold hms-price">@Model.TotalAmount.ToString("N0")₫</span></p>
+
+            @if (!string.IsNullOrEmpty(Model.GuestNote) || (Model.GuestPreference != null && !string.IsNullOrEmpty(Model.GuestPreference.RawText)))
+            {
+                <h5 class="fw-bold mb-2 mt-4"><i class="bi bi-pencil me-2" style="color:var(--teal);"></i>Ghi chú của khách</h5>
+                <div class="p-3 bg-light rounded text-muted small" style="border-left:3px solid var(--teal);">
+                    @if(!string.IsNullOrEmpty(Model.GuestNote)){<p class="mb-1">@Model.GuestNote</p>}
+                    @if(Model.GuestPreference != null && !string.IsNullOrEmpty(Model.GuestPreference.RawText)){<p class="mb-0"><strong>Nhu cầu:</strong> @Model.GuestPreference.RawText</p>}
+                </div>
+            }
         </div>
     </div>
+
+    <!-- Cột phải: AI Insight & Xác nhận -->
+    <div class="col-lg-7">
+        @if (Model.GuestPreference?.GuestInsight != null)
+        {
+            var insight = Model.GuestPreference.GuestInsight;
+            <div class="hms-form-section p-4 mb-4" style="border: 1px solid var(--teal-pale); box-shadow: 0 4px 12px rgba(13,148,136,0.1);">
+                <div class="d-flex align-items-center gap-2 border-bottom pb-2 mb-3">
+                    <i class="bi bi-magic fs-4" style="color:var(--teal);"></i>
+                    <h5 class="fw-bold mb-0">AI Phân tích nhu cầu</h5>
+                </div>
+                
+                <p class="mb-3"><strong>Summary:</strong> @insight.Summary</p>
+                
+                <div class="mb-3">
+                    <strong>Tags:</strong> 
+                    @foreach(var t in insight.Tags) { <span class="badge hms-badge hms-badge-ai">@t.TagName</span> }
+                </div>
+
+                @if(insight.Tasks.Any()){
+                    <div class="mb-3">
+                        <strong>Nhiệm vụ cho bộ phận:</strong>
+                        <ul class="mb-0 mt-1" style="font-size:0.9rem; padding-left:1.2rem;">
+                            @foreach(var t in insight.Tasks){
+                                <li><span class="badge bg-secondary me-1">@t.Department</span> <strong>@t.Title:</strong> @t.Description</li>
+                            }
+                        </ul>
+                    </div>
+                }
+
+                @if(insight.UpsellSuggestions.Any()){
+                    <div>
+                        <strong>Gợi ý Upsell:</strong>
+                        <ul class="mb-0 mt-1 text-success" style="font-size:0.9rem; padding-left:1.2rem;">
+                            @foreach(var u in insight.UpsellSuggestions){
+                                <li><strong>@u.Title:</strong> @u.Reason</li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-secondary">Khách hàng chưa cung cấp thêm nhu cầu cá nhân.</div>
+        }
+
+        <!-- Phần Xác nhận & Phản hồi -->
+        @if (Model.BookingStatus == HearMeStay.Models.Enums.BookingStatus.Pending)
+        {
+            <div class="hms-form-section p-4">
+                <h5 class="fw-bold mb-3 border-bottom pb-2"><i class="bi bi-check-circle me-2" style="color:#059669;"></i>Xác nhận Booking</h5>
+                
+                <form asp-action="Confirm" method="post" class="mb-3">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    
+                    @if (Model.GuestPreference != null)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Khả năng hỗ trợ yêu cầu đặc biệt</label>
+                            <select name="specialRequestStatus" class="form-select">
+                                <option value="CanSupport">Có thể hỗ trợ tất cả</option>
+                                <option value="PartialSupport">Hỗ trợ một phần</option>
+                                <option value="CannotSupport">Không thể hỗ trợ</option>
+                                <option value="NeedMoreInfo">Cần thêm thông tin</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Ghi chú phản hồi cho khách</label>
+                            <textarea name="partnerSpecialRequestNote" class="form-control" rows="2" placeholder="Ví dụ: Chúng tôi đã chuẩn bị phòng yên tĩnh cho bạn. Tuy nhiên dịch vụ BBQ không mở cửa..."></textarea>
+                        </div>
+                    }
+                    
+                    <button type="submit" class="btn btn-success w-100"><i class="bi bi-check-lg me-1"></i>Xác nhận & Gửi phản hồi</button>
+                </form>
+
+                <form asp-action="Reject" method="post" onsubmit="return confirm('Bạn chắc chắn muốn từ chối booking này?');">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <div class="mb-2">
+                        <textarea name="partnerNote" class="form-control" rows="1" placeholder="Lý do từ chối (tùy chọn)"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-outline-danger w-100"><i class="bi bi-x-lg me-1"></i>Từ chối đặt phòng</button>
+                </form>
+            </div>
+        }
+        else if (Model.BookingStatus == HearMeStay.Models.Enums.BookingStatus.PaymentVerificationPending)
+        {
+            <div class="hms-form-section p-4 text-center border border-info shadow-sm" style="background-color: #f0f9ff;">
+                <h5 class="fw-bold mb-3 text-info"><i class="bi bi-shield-check me-2"></i>Xác minh thanh toán</h5>
+                <p>Khách hàng đã báo cáo thanh toán. Hình thức: <strong>@Model.PaymentTransferContent</strong></p>
+                <form asp-action="VerifyPayment" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-info text-white fw-bold px-4 rounded-pill"><i class="bi bi-check-circle me-1"></i>Đã nhận được tiền & Hoàn tất</button>
+                </form>
+            </div>
+        }
+        else
+        {
+            <div class="hms-form-section p-4 text-center">
+                <h5 class="fw-bold">Trạng thái: 
+                    <span class="badge @(Model.BookingStatus == HearMeStay.Models.Enums.BookingStatus.Confirmed ? "badge-confirmed" : Model.BookingStatus == HearMeStay.Models.Enums.BookingStatus.PaymentPending ? "bg-warning text-dark" : Model.BookingStatus == HearMeStay.Models.Enums.BookingStatus.Cancelled ? "badge-cancelled" : "badge-completed")">
+                        @Model.BookingStatus
+                    </span>
+                </h5>
+                @if (Model.GuestPreference != null && Model.GuestPreference.SpecialRequestStatus != HearMeStay.Models.Enums.SpecialRequestStatus.Pending)
+                {
+                    <p class="mt-2 mb-1"><strong>Phản hồi yêu cầu:</strong> @Model.GuestPreference.SpecialRequestStatus</p>
+                    <p class="text-muted small">@Model.GuestPreference.PartnerSpecialRequestNote</p>
+                }
+            </div>
+        }
+    </div>
 </div>
-@if (Model.GuestPreference?.GuestInsight != null)
-{
-    <div class="alert alert-info"><i class="bi bi-lightbulb"></i> Khách đã điền form nhu cầu cá nhân. <a asp-controller="GuestInsights" asp-action="Details" asp-route-id="@Model.GuestPreference.GuestInsight.Id" class="alert-link">Xem Guest Insight</a></div>
-}
-<a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>

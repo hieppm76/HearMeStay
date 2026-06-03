@@ -1,10 +1,88 @@
 @model HearMeStay.ViewModels.AccommodationSearchViewModel
-@{ ViewData["Title"] = "Nơi lưu trú"; }
+@{ ViewData["Title"] = "Tìm kiếm nơi lưu trú"; }
+
+<style>
+    body { background-color: #F7F9FA; }
+    .hms-filter-sidebar {
+        background: #fff;
+        border-radius: var(--r);
+        padding: 1.25rem;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .hms-filter-section {
+        border-bottom: 1px solid var(--border-light);
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+    }
+    .hms-filter-section:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+    .hms-list-card {
+        background: #fff;
+        border-radius: var(--r);
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        overflow: hidden;
+        transition: box-shadow 0.2s ease;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+    }
+    .hms-list-card:hover {
+        box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        border-color: rgba(13,148,136,0.3);
+    }
+    .hms-card-img-col {
+        position: relative;
+        height: 100%;
+        min-height: 220px;
+    }
+    .hms-card-img-col img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .hms-score-badge {
+        background: var(--teal);
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+    .hms-original-price {
+        text-decoration: line-through;
+        color: #999;
+        font-size: 0.9rem;
+    }
+    .hms-discount-badge {
+        background: #FEE2E2;
+        color: #DC2626;
+        padding: 0.15rem 0.4rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+    .hms-price-large {
+        color: #DC2626;
+        font-size: 1.4rem;
+        font-weight: 800;
+        line-height: 1.2;
+    }
+    .hms-tax-info {
+        font-size: 0.75rem;
+        color: #666;
+    }
+</style>
 
 <div style="padding-top:100px;"></div>
-<div class="container py-4">
-    <div class="mb-4 fade-up"><h2 class="hms-section-title">Khám phá nơi lưu trú phù hợp với bạn</h2><p class="hms-section-sub mt-1">Tìm khách sạn, homestay, villa và resort theo nhu cầu cá nhân.</p></div>
 
+<div class="container-xl mb-5">
+    
+    <!-- ORIGINAL STYLE SEARCH BAR -->
     <div class="hms-form-section mb-4 fade-up">
         <form method="get">
             <div class="row g-3 align-items-end">
@@ -15,38 +93,181 @@
                 <div class="col-lg-2 col-md-4"><label class="form-label">Loại hình</label><select name="AccommodationType" class="form-select"><option value="">Tất cả</option><option value="Hotel">Khách sạn</option><option value="Homestay">Homestay</option><option value="Villa">Villa</option><option value="Resort">Resort</option><option value="Apartment">Căn hộ</option></select></div>
                 <div class="col-lg-2 col-md-2"><button type="submit" class="btn btn-primary w-100"><i class="bi bi-search me-1"></i>Tìm</button></div>
             </div>
-            <div class="d-flex flex-wrap gap-3 mt-3 pt-3" style="border-top:1px solid var(--border-light);">
-                <span class="text-muted small fw-semibold"><i class="bi bi-cpu me-1"></i>Bộ lọc AI:</span>
-                <div class="form-check"><input type="checkbox" name="IsQuietRoom" value="true" class="form-check-input" @(Model.IsQuietRoom==true?"checked":"") id="fq" /><label class="form-check-label small" for="fq">🤫 Yên tĩnh</label></div>
-                <div class="form-check"><input type="checkbox" name="SupportsVeganMeal" value="true" class="form-check-input" @(Model.SupportsVeganMeal==true?"checked":"") id="fv" /><label class="form-check-label small" for="fv">🌱 Ăn chay</label></div>
-                <div class="form-check"><input type="checkbox" name="SupportsAllergyRequest" value="true" class="form-check-input" @(Model.SupportsAllergyRequest==true?"checked":"") id="fa" /><label class="form-check-label small" for="fa">🛡️ Dị ứng</label></div>
-            </div>
         </form>
     </div>
 
-    @if (Model.Results.Any())
-    {
-        <p class="text-muted small mb-3">Tìm thấy <strong>@Model.Results.Count</strong> nơi lưu trú</p>
-        <div class="row g-4">
-        @foreach (var acc in Model.Results)
-        {
-            <div class="col-lg-4 col-md-6 fade-up">
-                <div class="hms-card h-100">
-                    <div class="card-img-wrap"><img src="@acc.MainImageUrl" class="card-img-top" alt="@acc.Name" /></div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2"><h6 class="fw-bold mb-0" style="font-size:.95rem;">@acc.Name</h6>@if(acc.StarRating.HasValue){<span class="badge" style="background:#FEF3C7;color:#92400E;font-size:.68rem;"><i class="bi bi-star-fill"></i> @acc.StarRating</span>}</div>
-                        <p class="text-muted small mb-2"><i class="bi bi-geo-alt"></i> @acc.City, @acc.Province</p>
-                        <div class="mb-2">@if(acc.HasQuietRoom){<span class="badge hms-badge hms-badge-ai me-1">🤫 Yên tĩnh</span>}@if(acc.HasVeganMeal){<span class="badge hms-badge hms-badge-ai me-1">🌱 Chay</span>}@if(acc.HasAllergySupport){<span class="badge hms-badge hms-badge-ai me-1">🛡️ Dị ứng</span>}</div>
-                        <div class="d-flex justify-content-between align-items-center"><div><span class="hms-price">@acc.MinPrice.ToString("N0")₫</span><span class="text-muted small">/đêm</span></div>@if(acc.ReviewCount>0){<span class="small"><i class="bi bi-star-fill text-warning"></i> @acc.AverageRating.ToString("F1")</span>}</div>
+    <div class="row g-4">
+        <!-- LEFT SIDEBAR: FILTERS -->
+        <div class="col-lg-3 d-none d-lg-block fade-up">
+            <!-- Map Card -->
+            <div class="card mb-4 border-0" style="border-radius: var(--r); overflow:hidden;">
+                <div class="position-relative" style="height: 120px; background: #E0F2FE;">
+                    <img src="https://maps.gstatic.com/mapfiles/api-3/images/cb_scout5.png" alt="Map" style="opacity:0.3; object-fit:cover; width:100%; height:100%;" />
+                    <div class="position-absolute top-50 start-50 translate-middle text-center w-100">
+                        <i class="bi bi-geo-alt-fill text-primary" style="font-size: 2rem;"></i><br/>
+                        <button class="btn btn-primary btn-sm rounded-pill fw-bold mt-1 px-3 shadow-sm">Bản đồ</button>
                     </div>
-                    <div class="card-footer"><a asp-action="Details" asp-route-id="@acc.Id" class="btn btn-outline-primary btn-sm w-100">Xem chi tiết</a></div>
                 </div>
             </div>
-        }
+
+            <!-- Filters -->
+            <div class="hms-filter-sidebar">
+                <form method="get" id="filterForm">
+                    <input type="hidden" name="City" value="@Model.City" />
+                    <input type="hidden" name="CheckIn" value="@Model.CheckIn?.ToString("yyyy-MM-dd")" />
+                    <input type="hidden" name="CheckOut" value="@Model.CheckOut?.ToString("yyyy-MM-dd")" />
+                    <input type="hidden" name="Guests" value="@Model.Guests" />
+
+                    <!-- Price Range -->
+                    <div class="hms-filter-section">
+                        <h6 class="fw-bold mb-3">Mức giá tối đa <span class="fw-normal text-muted small d-block">1 phòng, 1 đêm</span></h6>
+                        <input type="range" name="PriceMax" class="form-range" min="0" max="10000000" step="500000" id="priceRange" style="accent-color: var(--teal);" value="@(Model.PriceMax ?? 10000000)" onchange="document.getElementById('priceDisplay').innerText = new Intl.NumberFormat('vi-VN').format(this.value) + ' VND'; this.form.submit()">
+                        <div class="d-flex justify-content-between text-muted small mt-2">
+                            <span>0 VND</span>
+                            <span id="priceDisplay">@( (Model.PriceMax ?? 10000000).ToString("N0") ) VND</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Lọc Chế độ ăn uống -->
+                    <div class="hms-filter-section">
+                        <h6 class="fw-bold mb-3">Ăn uống & Dị ứng</h6>
+                        <div class="form-check mb-2">
+                            <input type="checkbox" name="SupportsVeganMeal" value="true" class="form-check-input" @(Model.SupportsVeganMeal==true?"checked":"") id="fv" onchange="this.form.submit()" />
+                            <label class="form-check-label small" for="fv">Hỗ trợ ăn chay (Vegan)</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input type="checkbox" name="SupportsAllergyRequest" value="true" class="form-check-input" @(Model.SupportsAllergyRequest==true?"checked":"") id="fa" onchange="this.form.submit()" />
+                            <label class="form-check-label small" for="fa">Hỗ trợ dị ứng thực phẩm</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input type="checkbox" class="form-check-input" id="fhalal">
+                            <label class="form-check-label small" for="fhalal">Đồ ăn Halal</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input type="checkbox" class="form-check-input" id="fkids">
+                            <label class="form-check-label small" for="fkids">Có thực đơn trẻ em</label>
+                        </div>
+                    </div>
+
+                    <!-- Lọc Kiểu phòng -->
+                    <div class="hms-filter-section">
+                        <h6 class="fw-bold mb-3">Kiểu phòng & Không gian</h6>
+                        <div class="form-check mb-2">
+                            <input type="checkbox" name="IsQuietRoom" value="true" class="form-check-input" @(Model.IsQuietRoom==true?"checked":"") id="fq" onchange="this.form.submit()" />
+                            <label class="form-check-label small" for="fq">Phòng cách âm / Yên tĩnh</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input type="checkbox" class="form-check-input" id="fr1">
+                            <label class="form-check-label small" for="fr1">Phòng có ban công</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input type="checkbox" class="form-check-input" id="fr2">
+                            <label class="form-check-label small" for="fr2">View biển / hồ</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input type="checkbox" class="form-check-input" id="fr3">
+                            <label class="form-check-label small" for="fr3">Phòng có bồn tắm</label>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
         </div>
-    }
-    else
-    {
-        <div class="text-center py-5 fade-up"><div class="hms-step-icon mx-auto mb-3" style="width:72px;height:72px;"><i class="bi bi-search" style="font-size:1.6rem;"></i></div><h5 class="fw-bold text-muted">Không tìm thấy kết quả</h5><p class="text-muted small">Hãy thử thay đổi bộ lọc.</p></div>
-    }
+
+        <!-- RIGHT SIDE: RESULTS LIST -->
+        <div class="col-lg-9 fade-up">
+            <!-- Results Header -->
+            <div class="d-flex justify-content-between align-items-end mb-3">
+                <div>
+                    <h4 class="fw-bold mb-1">@(string.IsNullOrEmpty(Model.City) ? "Tất cả địa điểm" : Model.City)</h4>
+                    <span class="text-muted small"><strong>@Model.Results.Count</strong> nơi lưu trú được tìm thấy</span>
+                </div>
+                <div class="d-flex gap-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="small fw-semibold text-muted text-nowrap">Xếp theo:</span>
+                        <select class="form-select form-select-sm" style="background-color: #E0F2FE; border:none; font-weight:600; color:#0369A1; border-radius:8px;">
+                            <option>Độ phổ biến</option>
+                            <option>Giá (Thấp đến Cao)</option>
+                            <option>Đánh giá cao nhất</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- List of Results -->
+            @if (Model.Results.Any())
+            {
+                foreach (var acc in Model.Results)
+                {
+                    <div class="hms-list-card">
+                        <div class="row g-0">
+                            <!-- Image Section -->
+                            <div class="col-md-4 hms-card-img-col">
+                                <img src="@acc.MainImageUrl" alt="@acc.Name" />
+                                <!-- Rating Badge on Image -->
+                                @if(acc.AverageRating > 0){
+                                    <div class="position-absolute top-0 end-0 m-2">
+                                        <div class="hms-score-badge d-flex align-items-center gap-1 shadow-sm">
+                                            <i class="bi bi-star-fill text-warning" style="font-size:0.8rem;"></i> @acc.AverageRating.ToString("F1")
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            
+                            <!-- Middle Section: Info -->
+                            <div class="col-md-5 p-3 d-flex flex-column justify-content-between" style="border-right: 1px dashed var(--border-light);">
+                                <div>
+                                    <h5 class="fw-bold mb-1" style="color: #111827;">@acc.Name</h5>
+                                    <div class="mb-2">
+                                        <span class="badge bg-light text-primary border border-primary-subtle me-1">Khách sạn</span>
+                                        @if(acc.StarRating.HasValue){
+                                            <span style="color:#F59E0B; font-size:0.75rem;">
+                                                @for(int i=0; i<acc.StarRating.Value; i++){ <i class="bi bi-star-fill"></i> }
+                                            </span>
+                                        }
+                                    </div>
+                                    <p class="text-muted small mb-2"><i class="bi bi-geo-alt text-primary"></i> @acc.City, @acc.Province</p>
+                                    
+                                    <div class="d-flex flex-wrap gap-1 mb-2">
+                                        @if(acc.HasQuietRoom){<span class="badge hms-badge hms-badge-ai"><i class="bi bi-volume-mute"></i> Yên tĩnh</span>}
+                                        @if(acc.HasVeganMeal){<span class="badge hms-badge hms-badge-ai"><i class="bi bi-flower1"></i> Ăn chay</span>}
+                                        @if(acc.HasAllergySupport){<span class="badge hms-badge hms-badge-ai"><i class="bi bi-shield-check"></i> Dị ứng</span>}
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <p class="mb-0 small fw-semibold text-success"><i class="bi bi-check2 text-success"></i> Miễn phí hủy phòng</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Right Section: Price & CTA -->
+                            <div class="col-md-3 p-3 d-flex flex-column justify-content-between align-items-end text-end bg-white">
+                                <div class="w-100 text-end">
+                                    @if(acc.ReviewCount > 0){
+                                        <div class="mb-3">
+                                            <span class="fw-bold" style="color: #0369A1; font-size: 0.95rem;">Rất tốt</span><br/>
+                                            <span class="text-muted small">(@acc.ReviewCount đánh giá)</span>
+                                        </div>
+                                    }
+                                    
+                                    <div class="hms-price-large">@acc.MinPrice.ToString("N0") <span style="font-size: 1rem; font-weight:700;">VND</span></div>
+                                    <div class="hms-tax-info mt-1">Tổng @( (acc.MinPrice).ToString("N0") ) VND<br/>cho 1 phòng<br/>Bao gồm thuế và phí</div>
+                                </div>
+                                <a asp-action="Details" asp-route-id="@acc.Id" class="btn btn-primary fw-bold px-4 py-2 mt-3 w-100 shadow-sm" style="border-radius: 8px;">Chọn phòng</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-center py-5 bg-white shadow-sm" style="border-radius: var(--r);">
+                    <div class="hms-step-icon mx-auto mb-3" style="width:72px;height:72px; background:#F3F4F6; color:#9CA3AF;"><i class="bi bi-search" style="font-size:1.6rem;"></i></div>
+                    <h5 class="fw-bold text-muted">Không tìm thấy kết quả</h5>
+                    <p class="text-muted small">Hãy thử thay đổi bộ lọc hoặc điểm đến.</p>
+                </div>
+            }
+        </div>
+    </div>
 </div>

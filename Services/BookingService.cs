@@ -55,11 +55,64 @@ namespace HearMeStay.Services
             var booking = await _context.Bookings.Include(b => b.Accommodation).FirstOrDefaultAsync(b => b.Id == bookingId);
             if (booking == null || booking.BookingStatus != BookingStatus.Pending) return null;
 
-            booking.BookingStatus = BookingStatus.Confirmed;
-            booking.ConfirmedAt = DateTime.Now;
+            booking.BookingStatus = BookingStatus.PaymentPending;
             booking.PartnerResponseNote = partnerNote;
+            
+            // Mock QR and Transfer Content for Payment step
+            booking.PaymentDeadline = DateTime.Now.AddHours(24);
+            booking.PaymentQrImageUrl = "https://img.vietqr.io/image/970436-0987654321-compact2.jpg?amount=" + booking.TotalAmount + "&addInfo=" + booking.BookingCode + "&accountName=HEARMESTAY";
+            booking.PaymentTransferContent = $"HMS {booking.BookingCode}";
 
-            // Create commission transaction
+            await _context.SaveChangesAsync();
+
+            await _notificationService.CreateNotificationAsync(
+                booking.UserId,
+                "Yêu cầu đặt phòng đã được xác nhận",
+                $"Nơi lưu trú đã xác nhận còn phòng cho #{booking.BookingCode}. Vui lòng thanh toán để hoàn tất.",
+                "BookingPaymentPending");
+
+            return booking;
+        }
+
+        public async Task<Booking?> SubmitPaymentProofAsync(int bookingId, string transferContent, string? proofImageUrl = null)
+        {
+            var booking = await _context.Bookings.FirstOrDefaultAsync(b => b.Id == bookingId);
+            if (booking == null || booking.BookingStatus != BookingStatus.PaymentPending) return null;
+
+            booking.BookingStatus = BookingStatus.PaymentVerificationPending;
+            // Optionally save the uploaded image url if provided (assuming it was uploaded elsewhere)
+            if (!string.IsNullOrEmpty(proofImageUrl))
+            {
+                booking.PaymentProofImageUrl = proofImageUrl;
+            }
+            await _context.SaveChangesAsync();
+
+            // Notify partner
+            var accommodation = await _context.Accommodations.FindAsync(booking.AccommodationId);
+            if (accommodation != null)
+            {
+                await _notificationService.CreateNotificationAsync(
+                    accommodation.OwnerId,
+                    "Khách đã thanh toán",
+                    $"Khách hàng đã báo thanh toán cho booking #{booking.BookingCode}. Vui lòng kiểm tra và xác minh.",
+                    "PaymentVerificationNeeded");
+            }
+
+            return booking;
+        }
+
+        public async Task<Booking?> VerifyPaymentAsync(int bookingId, string adminOrPartnerName)
+        {
+            var booking = await _context.Bookings.Include(b => b.Accommodation).FirstOrDefaultAsync(b => b.Id == bookingId);
+            if (booking == null || booking.BookingStatus != BookingStatus.PaymentVerificationPending) return null;
+
+            booking.BookingStatus = BookingStatus.Confirmed;
+            booking.PaymentStatus = PaymentStatus.Paid;
+            booking.ConfirmedAt = DateTime.Now;
+            booking.PaymentVerifiedAt = DateTime.Now;
+            booking.PaymentVerifiedBy = adminOrPartnerName;
+
+            // Create commission transaction now that payment is verified
             var commission = new CommissionTransaction
             {
                 BookingId = booking.Id,
@@ -74,8 +127,8 @@ namespace HearMeStay.Services
 
             await _notificationService.CreateNotificationAsync(
                 booking.UserId,
-                "Đặt phòng đã được xác nhận",
-                $"Đặt phòng #{booking.BookingCode} đã được xác nhận. Bạn có thể điền form nhu cầu cá nhân.",
+                "Thanh toán thành công",
+                $"Thanh toán cho đặt phòng #{booking.BookingCode} đã được xác nhận. Chúc bạn có kỳ nghỉ vui vẻ!",
                 "BookingConfirmed");
 
             return booking;

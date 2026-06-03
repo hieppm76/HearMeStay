@@ -39,20 +39,40 @@ namespace HearMeStay.Areas.Partner.Controllers
             var userId = _userManager.GetUserId(User);
             var booking = await _context.Bookings
                 .Include(b => b.Accommodation).Include(b => b.RoomType).Include(b => b.User)
-                .Include(b => b.GuestPreference).ThenInclude(p => p!.GuestInsight)
+                .Include(b => b.GuestPreference)
+                    .ThenInclude(p => p!.GuestInsight)
+                        .ThenInclude(gi => gi!.Tags)
+                .Include(b => b.GuestPreference)
+                    .ThenInclude(p => p!.GuestInsight)
+                        .ThenInclude(gi => gi!.Tasks)
+                .Include(b => b.GuestPreference)
+                    .ThenInclude(p => p!.GuestInsight)
+                        .ThenInclude(gi => gi!.UpsellSuggestions)
                 .FirstOrDefaultAsync(b => b.Id == id && b.Accommodation.OwnerId == userId);
             if (booking == null) return NotFound();
             return View(booking);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Confirm(int id, string? partnerNote)
+        public async Task<IActionResult> Confirm(int id, HearMeStay.Models.Enums.SpecialRequestStatus specialRequestStatus, string? partnerSpecialRequestNote)
         {
             var userId = _userManager.GetUserId(User);
-            var booking = await _context.Bookings.Include(b => b.Accommodation).FirstOrDefaultAsync(b => b.Id == id && b.Accommodation.OwnerId == userId);
+            var booking = await _context.Bookings.Include(b => b.Accommodation).Include(b => b.GuestPreference).FirstOrDefaultAsync(b => b.Id == id && b.Accommodation.OwnerId == userId);
             if (booking == null) return NotFound();
-            await _bookingService.ConfirmBookingAsync(id, partnerNote);
-            TempData["Success"] = "Booking đã được xác nhận. Khách có thể điền form nhu cầu cá nhân.";
+            
+            // Confirm the booking
+            await _bookingService.ConfirmBookingAsync(id, partnerSpecialRequestNote);
+            
+            // Handle Special Request Status if a GuestPreference exists
+            if (booking.GuestPreference != null)
+            {
+                booking.GuestPreference.SpecialRequestStatus = specialRequestStatus;
+                booking.GuestPreference.PartnerSpecialRequestNote = partnerSpecialRequestNote;
+                _context.Update(booking.GuestPreference);
+                await _context.SaveChangesAsync();
+            }
+
+            TempData["Success"] = "Booking đã được xác nhận và phản hồi khách hàng.";
             return RedirectToAction("Index");
         }
 
@@ -65,6 +85,19 @@ namespace HearMeStay.Areas.Partner.Controllers
             await _bookingService.RejectBookingAsync(id, partnerNote);
             TempData["Success"] = "Đã từ chối đặt phòng.";
             return RedirectToAction("Index");
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> VerifyPayment(int id)
+        {
+            var userId = _userManager.GetUserId(User);
+            var user = await _userManager.FindByIdAsync(userId);
+            var booking = await _context.Bookings.Include(b => b.Accommodation).FirstOrDefaultAsync(b => b.Id == id && b.Accommodation.OwnerId == userId);
+            if (booking == null) return NotFound();
+
+            await _bookingService.VerifyPaymentAsync(id, user?.FullName ?? "Partner");
+            TempData["Success"] = "Đã xác minh thanh toán thành công. Đặt phòng đã hoàn tất.";
+            return RedirectToAction("Details", new { id });
         }
 
         [HttpPost, ValidateAntiForgeryToken]

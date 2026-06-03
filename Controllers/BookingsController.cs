@@ -76,8 +76,7 @@ namespace HearMeStay.Controllers
             };
 
             await _bookingService.CreateBookingAsync(booking);
-            TempData["Success"] = "Đặt phòng thành công! Đang chờ khách sạn xác nhận.";
-            return RedirectToAction("MyBookings");
+            return RedirectToAction("Create", "Preferences", new { bookingId = booking.Id });
         }
 
         public async Task<IActionResult> MyBookings()
@@ -105,6 +104,25 @@ namespace HearMeStay.Controllers
                 .FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
             if (booking == null) return NotFound();
             return View(booking);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SubmitPayment(int id)
+        {
+            var userId = _userManager.GetUserId(User);
+            var booking = await _context.Bookings.FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
+            if (booking == null) return NotFound();
+
+            var result = await _bookingService.SubmitPaymentProofAsync(id, booking.PaymentTransferContent ?? "");
+            if (result == null)
+            {
+                TempData["Error"] = "Không thể báo cáo thanh toán cho đặt phòng này.";
+                return RedirectToAction("Details", new { id });
+            }
+
+            TempData["Success"] = "Đã báo cáo thanh toán. Vui lòng chờ hệ thống xác minh.";
+            return RedirectToAction("Details", new { id });
         }
 
         [HttpPost]

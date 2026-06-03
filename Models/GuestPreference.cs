@@ -58,6 +58,12 @@ namespace HearMeStay.Models
         [Display(Name = "Đồng ý chia sẻ với nơi lưu trú")]
         public bool ConsentToShareWithHotel { get; set; }
 
+        [Display(Name = "Trạng thái yêu cầu đặc biệt")]
+        public HearMeStay.Models.Enums.SpecialRequestStatus SpecialRequestStatus { get; set; } = HearMeStay.Models.Enums.SpecialRequestStatus.Pending;
+
+        [Display(Name = "Phản hồi của khách sạn")]
+        public string? PartnerSpecialRequestNote { get; set; }
+
         [Display(Name = "Ngày tạo")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 

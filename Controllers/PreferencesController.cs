@@ -37,9 +37,9 @@ namespace HearMeStay.Controllers
                 .FirstOrDefaultAsync(b => b.Id == bookingId && b.UserId == userId);
 
             if (booking == null) return NotFound();
-            if (booking.BookingStatus != BookingStatus.Confirmed)
+            if (booking.BookingStatus != BookingStatus.Confirmed && booking.BookingStatus != BookingStatus.Pending)
             {
-                TempData["Error"] = "Chỉ có thể điền form khi đặt phòng đã được xác nhận.";
+                TempData["Error"] = "Không thể điền form nhu cầu cho đặt phòng này.";
                 return RedirectToAction("Details", "Bookings", new { id = bookingId });
             }
             if (booking.GuestPreference != null)
@@ -68,7 +68,7 @@ namespace HearMeStay.Controllers
 
             var userId = _userManager.GetUserId(User);
             var booking = await _context.Bookings.Include(x => x.Accommodation).FirstOrDefaultAsync(b => b.Id == model.BookingId && b.UserId == userId);
-            if (booking == null || booking.BookingStatus != BookingStatus.Confirmed) return NotFound();
+            if (booking == null || (booking.BookingStatus != BookingStatus.Confirmed && booking.BookingStatus != BookingStatus.Pending)) return NotFound();
 
             var pref = new GuestPreference
             {

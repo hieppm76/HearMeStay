@@ -4,6 +4,7 @@ using HearMeStay.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HearMeStay.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260603021240_AddSpecialRequestStatusToPreference")]
+    partial class AddSpecialRequestStatusToPreference
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -371,29 +374,11 @@ namespace HearMeStay.Migrations
                     b.Property<string>("PartnerResponseNote")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("PaymentDeadline")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("PaymentMethod")
                         .HasColumnType("int");
 
-                    b.Property<string>("PaymentProofImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentQrImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("PaymentStatus")
                         .HasColumnType("int");
-
-                    b.Property<string>("PaymentTransferContent")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("PaymentVerifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PaymentVerifiedBy")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RoomTypeId")
                         .HasColumnType("int");

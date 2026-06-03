@@ -115,6 +115,24 @@ namespace HearMeStay.Models
         [Display(Name = "Ngày hủy")]
         public DateTime? CancelledAt { get; set; }
 
+        [Display(Name = "Mã QR thanh toán")]
+        public string? PaymentQrImageUrl { get; set; }
+
+        [Display(Name = "Ảnh chứng từ thanh toán")]
+        public string? PaymentProofImageUrl { get; set; }
+
+        [Display(Name = "Nội dung chuyển khoản")]
+        public string? PaymentTransferContent { get; set; }
+
+        [Display(Name = "Hạn chót thanh toán")]
+        public DateTime? PaymentDeadline { get; set; }
+
+        [Display(Name = "Thời gian xác minh thanh toán")]
+        public DateTime? PaymentVerifiedAt { get; set; }
+
+        [Display(Name = "Người xác minh thanh toán")]
+        public string? PaymentVerifiedBy { get; set; }
+
         // Navigation properties
         public virtual GuestPreference? GuestPreference { get; set; }
         public virtual Review? Review { get; set; }

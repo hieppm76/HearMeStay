@@ -20,34 +20,34 @@
     <!-- Navbar -->
     <div class="hms-navbar-wrap">
         <nav class="navbar navbar-expand-lg hms-navbar liquid-glass">
-            <a class="navbar-brand" asp-controller="Home" asp-action="Index">HearMeStay</a>
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index" style="color: var(--navy-deep) !important;">HearMeStay</a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse justify-content-center" id="navMenu">
                 <ul class="navbar-nav mx-auto">
-                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Accommodations" asp-action="Index">Nơi lưu trú</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">Cách hoạt động</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="BecomePartner">Trở thành đối tác</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index" style="color: var(--navy) !important; font-weight: 600;">Trang chủ</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Accommodations" asp-action="Index" style="color: var(--navy) !important; font-weight: 600;">Nơi lưu trú</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About" style="color: var(--navy) !important; font-weight: 600;">Cách hoạt động</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="BecomePartner" style="color: var(--navy) !important; font-weight: 600;">Trở thành đối tác</a></li>
                 </ul>
                 <div class="d-flex align-items-center gap-2">
                     @if (SignInManager.IsSignedIn(User))
                     {
                         @if (User.IsInRole("HotelPartner"))
                         {
-                            <a class="nav-link text-white-50" style="font-size:.85rem;" asp-area="Partner" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+                            <a class="nav-link" style="color: var(--navy) !important; font-weight: 600; font-size:.85rem;" asp-area="Partner" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
                         }
                         @if (User.IsInRole("Admin"))
                         {
-                            <a class="nav-link text-white-50" style="font-size:.85rem;" asp-area="Admin" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-gear me-1"></i>Admin</a>
+                            <a class="nav-link" style="color: var(--navy) !important; font-weight: 600; font-size:.85rem;" asp-area="Admin" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-gear me-1"></i>Admin</a>
                         }
                         @if (User.IsInRole("Traveler"))
                         {
-                            <a class="btn btn-nav" asp-controller="Bookings" asp-action="MyBookings">Đặt phòng của tôi</a>
+                            <a class="btn btn-primary btn-sm rounded-pill px-3" asp-controller="Bookings" asp-action="MyBookings">Đặt phòng của tôi</a>
                         }
                         <div class="dropdown">
-                            <a class="btn btn-glass dropdown-toggle d-flex align-items-center gap-2" href="#" data-bs-toggle="dropdown" style="font-size:.82rem;padding:.4rem .9rem;">
+                            <a class="btn btn-outline-primary btn-sm rounded-pill dropdown-toggle d-flex align-items-center gap-2" href="#" data-bs-toggle="dropdown" style="font-size:.82rem;padding:.4rem .9rem;">
                                 <i class="bi bi-person-circle"></i>
                                 <span class="d-none d-lg-inline">@UserManager.GetUserAsync(User).Result?.FullName</span>
                             </a>
@@ -64,8 +64,8 @@
                     }
                     else
                     {
-                        <a class="nav-link" asp-controller="Account" asp-action="Login" style="color:var(--white-70)!important;font-size:.85rem;">Đăng nhập</a>
-                        <a class="btn btn-nav" asp-controller="Accommodations" asp-action="Index">Bắt đầu đặt phòng</a>
+                        <a class="nav-link" asp-controller="Account" asp-action="Login" style="color: var(--navy) !important; font-weight: 600; font-size:.85rem;">Đăng nhập</a>
+                        <a class="btn btn-primary btn-sm rounded-pill px-3 py-2" asp-controller="Accommodations" asp-action="Index">Bắt đầu đặt phòng</a>
                     }
                 </div>
             </div>

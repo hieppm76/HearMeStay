@@ -10,21 +10,103 @@
                 <p class="hms-section-sub">Thông tin này giúp nơi lưu trú chuẩn bị tốt hơn trước khi bạn đến.</p>
                 <p class="text-muted small">Đặt phòng <strong>#@Model.BookingCode</strong> — @Model.AccommodationName</p>
             </div>
-            <form asp-action="Create" method="post">
+            <form asp-action="Create" method="post" id="preferenceForm">
                 <input type="hidden" asp-for="BookingId" />
+                <input type="hidden" asp-for="RawText" id="finalRawText" />
+                
                 <div asp-validation-summary="All" class="text-danger mb-3"></div>
-                <div class="hms-form-section fade-up"><div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#FEE2E2;color:#991B1B;">🍽️</div><h6 class="hms-form-section-title">Ăn uống & dị ứng</h6></div><div class="form-check mb-3"><input asp-for="HasFoodAllergy" class="form-check-input" /><label asp-for="HasFoodAllergy" class="form-check-label">Tôi có dị ứng thực phẩm</label></div><div class="mb-3"><label asp-for="FoodAllergyDetail" class="form-label">Chi tiết dị ứng</label><input asp-for="FoodAllergyDetail" class="form-control" placeholder="VD: Dị ứng hải sản, đậu phộng, gluten..." /></div><div><label asp-for="DietPreference" class="form-label">Chế độ ăn đặc biệt</label><input asp-for="DietPreference" class="form-control" placeholder="VD: Ăn chay, không thịt bò, Halal..." /></div></div>
-                <div class="hms-form-section fade-up"><div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#DBEAFE;color:#1E40AF;">🛏️</div><h6 class="hms-form-section-title">Thói quen phòng</h6></div><textarea asp-for="RoomPreference" class="form-control" rows="2" placeholder="VD: Phòng yên tĩnh, tầng cao, không mùi nồng, cần thêm gối..."></textarea></div>
-                <div class="hms-form-section fade-up"><div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#FCE7F3;color:#9D174D;">❤️</div><h6 class="hms-form-section-title">Sức khỏe & an toàn</h6></div><textarea asp-for="HealthNote" class="form-control" rows="2" placeholder="VD: Hen suyễn, cần thang máy, đi xe lăn..."></textarea></div>
-                <div class="hms-form-section fade-up"><div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#FEF3C7;color:#92400E;">🎉</div><h6 class="hms-form-section-title">Dịp đặc biệt</h6></div><div class="mb-3"><label asp-for="SpecialOccasion" class="form-label">Dịp gì?</label><input asp-for="SpecialOccasion" class="form-control" placeholder="VD: Sinh nhật, kỷ niệm ngày cưới, tuần trăng mật..." /></div><div><label asp-for="TravelPurpose" class="form-label">Mục đích chuyến đi</label><input asp-for="TravelPurpose" class="form-control" placeholder="VD: Nghỉ dưỡng, công tác, gia đình..." /></div></div>
-                <div class="hms-form-section fade-up"><div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#CFFAFE;color:#155E75;">🎯</div><h6 class="hms-form-section-title">Hoạt động & dịch vụ thêm</h6></div><div class="mb-3"><label asp-for="ActivityInterest" class="form-label">Hoạt động quan tâm</label><input asp-for="ActivityInterest" class="form-control" placeholder="VD: Spa, tour thuyền, BBQ, lặn biển..." /></div><div class="d-flex flex-column gap-2"><div class="form-check"><input asp-for="NeedAirportPickup" class="form-check-input" /><label asp-for="NeedAirportPickup" class="form-check-label">✈️ Cần đưa đón sân bay</label></div><div class="form-check"><input asp-for="NeedEarlyCheckIn" class="form-check-input" /><label asp-for="NeedEarlyCheckIn" class="form-check-label">⏰ Cần nhận phòng sớm</label></div><div class="form-check"><input asp-for="NeedDecoration" class="form-check-input" /><label asp-for="NeedDecoration" class="form-check-label">🎊 Cần trang trí phòng</label></div></div></div>
-                <div class="hms-form-section fade-up"><div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#F3E8FF;color:#6B21A8;">📝</div><h6 class="hms-form-section-title">Ghi chú tự do</h6></div><textarea asp-for="RawText" class="form-control" rows="3" placeholder="Ví dụ: Mình ăn chay, không thích mùi tinh dầu, muốn phòng yên tĩnh và đi kỷ niệm 2 năm."></textarea></div>
-                <div class="hms-form-section fade-up" style="background:var(--teal-pale);border-color:rgba(13,148,136,.2);">
-                    <div class="form-check"><input asp-for="ConsentToShareWithHotel" class="form-check-input" /><label asp-for="ConsentToShareWithHotel" class="form-check-label fw-bold">Tôi đồng ý chia sẻ thông tin này với nơi lưu trú để họ chuẩn bị dịch vụ phù hợp.</label><span asp-validation-for="ConsentToShareWithHotel" class="text-danger d-block small"></span></div>
+                
+                <!-- 1. Ăn uống & dị ứng -->
+                <div class="hms-form-section fade-up">
+                    <div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#FEE2E2;color:#991B1B;">🍽️</div><h6 class="hms-form-section-title">Ăn uống & dị ứng</h6></div>
+                    <div class="row g-2">
+                        <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox" type="checkbox" value="Tôi ăn chay" id="chkFood1"><label class="form-check-label" for="chkFood1">Tôi ăn chay</label></div></div>
+                        <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox" type="checkbox" value="Tôi dị ứng hải sản" id="chkFood2"><label class="form-check-label" for="chkFood2">Tôi dị ứng hải sản</label></div></div>
+                        <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox" type="checkbox" value="Tôi không ăn đồ cay" id="chkFood3"><label class="form-check-label" for="chkFood3">Tôi không ăn đồ cay</label></div></div>
+                        <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox" type="checkbox" value="Tôi cần bữa sáng phù hợp" id="chkFood4"><label class="form-check-label" for="chkFood4">Tôi cần bữa sáng phù hợp</label></div></div>
+                    </div>
                 </div>
-                <div class="d-flex gap-2 mt-3 fade-up"><button type="submit" class="btn btn-primary btn-lg flex-grow-1"><i class="bi bi-send me-1"></i>Gửi thông tin cho nơi lưu trú</button><a asp-controller="Bookings" asp-action="MyBookings" class="btn btn-outline-secondary btn-lg">Bỏ qua</a></div>
+
+                <!-- 2. Thói quen phòng -->
+                <div class="hms-form-section fade-up">
+                    <div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#DBEAFE;color:#1E40AF;">🛏️</div><h6 class="hms-form-section-title">Thói quen phòng</h6></div>
+                    <div class="row g-2">
+                        <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox" type="checkbox" value="Tôi muốn phòng yên tĩnh" id="chkRoom1"><label class="form-check-label" for="chkRoom1">Tôi muốn phòng yên tĩnh</label></div></div>
+                        <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox" type="checkbox" value="Tôi không thích mùi hương mạnh" id="chkRoom2"><label class="form-check-label" for="chkRoom2">Tôi không thích mùi hương mạnh</label></div></div>
+                        <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox" type="checkbox" value="Tôi muốn giường lớn" id="chkRoom3"><label class="form-check-label" for="chkRoom3">Tôi muốn giường lớn</label></div></div>
+                        <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox" type="checkbox" value="Tôi muốn phòng có ánh sáng tự nhiên" id="chkRoom4"><label class="form-check-label" for="chkRoom4">Tôi muốn phòng có ánh sáng tự nhiên</label></div></div>
+                    </div>
+                </div>
+
+                <!-- 3. Dịp đặc biệt -->
+                <div class="hms-form-section fade-up">
+                    <div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#FEF3C7;color:#92400E;">🎉</div><h6 class="hms-form-section-title">Dịp đặc biệt</h6></div>
+                    <div class="row g-2">
+                        <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox" type="checkbox" value="Đi sinh nhật" id="chkOcc1"><label class="form-check-label" for="chkOcc1">Sinh nhật</label></div></div>
+                        <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox" type="checkbox" value="Đi kỷ niệm" id="chkOcc2"><label class="form-check-label" for="chkOcc2">Kỷ niệm</label></div></div>
+                        <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox" type="checkbox" value="Honeymoon" id="chkOcc3"><label class="form-check-label" for="chkOcc3">Honeymoon</label></div></div>
+                        <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox" type="checkbox" value="Chuyến đi gia đình" id="chkOcc4"><label class="form-check-label" for="chkOcc4">Chuyến đi gia đình</label></div></div>
+                    </div>
+                </div>
+
+                <!-- 4. Dịch vụ thêm -->
+                <div class="hms-form-section fade-up">
+                    <div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#CFFAFE;color:#155E75;">🎯</div><h6 class="hms-form-section-title">Dịch vụ thêm</h6></div>
+                    <div class="row g-2">
+                        <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox" type="checkbox" value="Cần trang trí phòng" id="chkSvc1"><label class="form-check-label" for="chkSvc1">Trang trí phòng</label></div></div>
+                        <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox" type="checkbox" value="Cần đưa đón sân bay" id="chkSvc2"><label class="form-check-label" for="chkSvc2">Đưa đón sân bay</label></div></div>
+                        <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox" type="checkbox" value="Muốn ăn BBQ" id="chkSvc3"><label class="form-check-label" for="chkSvc3">BBQ</label></div></div>
+                        <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox" type="checkbox" value="Cần Spa" id="chkSvc4"><label class="form-check-label" for="chkSvc4">Spa</label></div></div>
+                        <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox" type="checkbox" value="Muốn đi tour địa phương" id="chkSvc5"><label class="form-check-label" for="chkSvc5">Tour địa phương</label></div></div>
+                    </div>
+                </div>
+
+                <!-- 5. Ghi chú thêm -->
+                <div class="hms-form-section fade-up">
+                    <div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#F3E8FF;color:#6B21A8;">📝</div><h6 class="hms-form-section-title">Ghi chú thêm</h6></div>
+                    <textarea id="freeText" class="form-control" rows="3" placeholder="Ví dụ: Mình ăn chay, không thích mùi tinh dầu, muốn phòng yên tĩnh và đi kỷ niệm 2 năm."></textarea>
+                </div>
+
+                <div class="alert alert-info fade-up" style="font-size: .88rem;">
+                    <i class="bi bi-info-circle-fill me-2"></i>Đây là bước gửi yêu cầu đặt phòng và chia sẻ nhu cầu cá nhân đến nơi lưu trú. Booking chỉ được giữ và chuyển sang bước thanh toán sau khi nơi lưu trú xác nhận còn phòng. Nếu nơi lưu trú không còn phòng hoặc không thể đáp ứng yêu cầu đặc biệt, HearMeStay sẽ hỗ trợ gợi ý lựa chọn phù hợp hơn cho bạn.
+                </div>
+
+                <div class="hms-form-section fade-up" style="background:var(--teal-pale);border-color:rgba(13,148,136,.2);">
+                    <div class="form-check">
+                        <input asp-for="ConsentToShareWithHotel" class="form-check-input" />
+                        <label asp-for="ConsentToShareWithHotel" class="form-check-label fw-bold">Tôi đồng ý chia sẻ thông tin này với nơi lưu trú để họ chuẩn bị dịch vụ phù hợp.</label>
+                        <span asp-validation-for="ConsentToShareWithHotel" class="text-danger d-block small"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-3 fade-up">
+                    <button type="submit" class="btn btn-primary btn-lg flex-grow-1"><i class="bi bi-send me-1"></i>Gửi yêu cầu đặt phòng</button>
+                    <a asp-controller="Bookings" asp-action="MyBookings" class="btn btn-outline-secondary btn-lg">Bỏ qua</a>
+                </div>
             </form>
         </div>
     </div>
 </div>
-@section Scripts{<partial name="_ValidationScriptsPartial" />}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('preferenceForm').addEventListener('submit', function (e) {
+            let combinedText = [];
+            
+            // Gather checkboxes
+            document.querySelectorAll('.pref-checkbox:checked').forEach(cb => {
+                combinedText.push(cb.value);
+            });
+            
+            // Gather free text
+            let freeText = document.getElementById('freeText').value.trim();
+            if (freeText) {
+                combinedText.push(freeText);
+            }
+            
+            // Set to hidden RawText
+            document.getElementById('finalRawText').value = combinedText.join('. ');
+        });
+    </script>
+}

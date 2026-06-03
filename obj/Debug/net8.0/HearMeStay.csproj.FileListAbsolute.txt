@@ -151,4 +151,5 @@ D:\EXE201\HearMeStay\obj\Debug\net8.0\refint\HearMeStay.dll
 D:\EXE201\HearMeStay\obj\Debug\net8.0\HearMeStay.pdb
 D:\EXE201\HearMeStay\obj\Debug\net8.0\HearMeStay.genruntimeconfig.cache
 D:\EXE201\HearMeStay\obj\Debug\net8.0\ref\HearMeStay.dll
+D:\EXE201\HearMeStay\obj\Debug\net8.0\HearMeStay.sourcelink.json
 D:\EXE201\HearMeStay\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
