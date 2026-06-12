@@ -1,104 +1,177 @@
 @model HearMeStay.Models.GuestInsight
-@{ ViewData["Title"] = "Chi tiết Guest Insight"; }
+@{ ViewData["Title"] = "Phân tích Nhu cầu (Guest Insight)"; }
 @{
-    var priCls = Model.PriorityLevel switch { HearMeStay.Models.Enums.PriorityLevel.Low=>"badge-priority-low", HearMeStay.Models.Enums.PriorityLevel.Medium=>"badge-priority-medium", HearMeStay.Models.Enums.PriorityLevel.High=>"badge-priority-high", HearMeStay.Models.Enums.PriorityLevel.Critical=>"badge-priority-critical", _=>"" };
+    var priCls = Model.PriorityLevel switch { HearMeStay.Models.Enums.PriorityLevel.Low=>"bg-light text-secondary", HearMeStay.Models.Enums.PriorityLevel.Medium=>"bg-warning text-dark", HearMeStay.Models.Enums.PriorityLevel.High=>"bg-danger text-white", HearMeStay.Models.Enums.PriorityLevel.Critical=>"bg-dark text-white", _=>"bg-light" };
     var priText = Model.PriorityLevel switch { HearMeStay.Models.Enums.PriorityLevel.Low=>"Thấp", HearMeStay.Models.Enums.PriorityLevel.Medium=>"Trung bình", HearMeStay.Models.Enums.PriorityLevel.High=>"Cao", HearMeStay.Models.Enums.PriorityLevel.Critical=>"Khẩn cấp", _=>"" };
 }
 
-<h2 class="fw-bold mb-1"><i class="bi bi-lightbulb"></i> Guest Insight</h2>
-<p class="text-muted mb-4">Khách: <strong>@Model.GuestPreference.Booking.User.FullName</strong> | Mã: @Model.GuestPreference.Booking.BookingCode | Phòng: @Model.GuestPreference.Booking.RoomType.Name</p>
-
-<!-- Summary & Priority -->
-<div class="card shadow-sm border-0 p-4 mb-4" style="border-radius:16px;">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="fw-bold mb-0">Tóm tắt AI</h5>
-        <span class="badge @priCls px-3 py-2">Ưu tiên: @priText</span>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1" style="color: var(--navy-deep);"><i class="bi bi-robot me-2 text-teal"></i> AI Guest Insight</h2>
+        <p class="text-muted mb-0">Phân tích nhu cầu tự động cho mã đặt phòng <strong class="text-primary">#@Model.GuestPreference.Booking.BookingCode</strong></p>
     </div>
-    <p class="mb-0">@Model.Summary</p>
+    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i> Quay lại</a>
 </div>
 
-<!-- Tags -->
-@if (Model.Tags.Any())
-{
-    <div class="card shadow-sm border-0 p-4 mb-4" style="border-radius:16px;">
-        <h5 class="fw-bold mb-3">Thẻ nhu cầu</h5>
-        <div class="d-flex flex-wrap gap-2">
-            @foreach (var tag in Model.Tags)
-            {
-                var tagCls = tag.Category switch {
-                    HearMeStay.Models.Enums.TagCategory.Allergy=>"tag-allergy", HearMeStay.Models.Enums.TagCategory.FoodDiet=>"tag-fooddiet",
-                    HearMeStay.Models.Enums.TagCategory.RoomPreference=>"tag-room", HearMeStay.Models.Enums.TagCategory.HealthNote=>"tag-health",
-                    HearMeStay.Models.Enums.TagCategory.SpecialOccasion=>"tag-occasion", HearMeStay.Models.Enums.TagCategory.FamilyNeed=>"tag-family",
-                    HearMeStay.Models.Enums.TagCategory.ActivityInterest=>"tag-activity", HearMeStay.Models.Enums.TagCategory.UpsellOpportunity=>"tag-upsell", _=>"" };
-                var sevIcon = tag.Severity switch { HearMeStay.Models.Enums.SeverityLevel.High=>"🔴", HearMeStay.Models.Enums.SeverityLevel.Medium=>"🟡", _=>"🟢" };
-                <span class="badge @tagCls px-3 py-2">@sevIcon @tag.TagName</span>
-            }
-        </div>
-    </div>
-}
-
-<!-- Tasks by Department -->
-@if (Model.Tasks.Any())
-{
-    <div class="card shadow-sm border-0 p-4 mb-4" style="border-radius:16px;">
-        <h5 class="fw-bold mb-3">Việc cần chuẩn bị</h5>
-        @foreach (var dept in Model.Tasks.GroupBy(t => t.Department))
-        {
-            var deptName = dept.Key switch { HearMeStay.Models.Enums.Department.Reception=>"Lễ tân", HearMeStay.Models.Enums.Department.Housekeeping=>"Buồng phòng", HearMeStay.Models.Enums.Department.Kitchen=>"Bếp", HearMeStay.Models.Enums.Department.CustomerService=>"Chăm sóc khách hàng", HearMeStay.Models.Enums.Department.Manager=>"Quản lý", _=>"" };
-            <h6 class="fw-bold mt-3"><i class="bi bi-people"></i> @deptName</h6>
-            @foreach (var task in dept)
-            {
-                var tsCls = task.TaskStatus switch { HearMeStay.Models.Enums.GuestTaskStatus.Pending=>"badge-pending", HearMeStay.Models.Enums.GuestTaskStatus.InProgress=>"badge bg-info text-dark", HearMeStay.Models.Enums.GuestTaskStatus.Done=>"badge-completed", HearMeStay.Models.Enums.GuestTaskStatus.CannotSupport=>"badge-rejected", HearMeStay.Models.Enums.GuestTaskStatus.NeedMoreInfo=>"badge-pending", _=>"" };
-                var tsText = task.TaskStatus switch { HearMeStay.Models.Enums.GuestTaskStatus.Pending=>"Chưa xử lý", HearMeStay.Models.Enums.GuestTaskStatus.InProgress=>"Đang xử lý", HearMeStay.Models.Enums.GuestTaskStatus.Done=>"Đã hoàn thành", HearMeStay.Models.Enums.GuestTaskStatus.CannotSupport=>"Không thể hỗ trợ", HearMeStay.Models.Enums.GuestTaskStatus.NeedMoreInfo=>"Cần thêm thông tin", _=>"" };
-                <div class="d-flex justify-content-between align-items-center border rounded p-3 mb-2">
-                    <div>
-                        <strong>@task.Title</strong>
-                        <p class="text-muted small mb-0">@task.Description</p>
+<div class="row g-4 mb-4">
+    <!-- Cột trái: Thông tin chính & Tóm tắt AI -->
+    <div class="col-lg-4">
+        <!-- Card Thông tin khách -->
+        <div class="card shadow-sm border-0 mb-4" style="border-radius: 16px; border-top: 4px solid var(--teal) !important;">
+            <div class="card-body p-4">
+                <h6 class="fw-bold text-muted mb-3 text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Thông tin lưu trú</h6>
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center bg-primary text-white fs-4 fw-bold" style="width: 50px; height: 50px;">
+                        @Model.GuestPreference.Booking.User.FullName.Substring(0, 1)
                     </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="badge @tsCls px-2 py-1">@tsText</span>
-                        <form asp-action="UpdateTaskStatus" method="post" class="d-flex gap-1">
-                            <input type="hidden" name="taskId" value="@task.Id" />
-                            <select name="status" class="form-select form-select-sm" style="width:auto;">
-                                <option value="Pending">Chưa xử lý</option>
-                                <option value="InProgress">Đang xử lý</option>
-                                <option value="Done">Đã hoàn thành</option>
-                                <option value="CannotSupport">Không thể hỗ trợ</option>
-                                <option value="NeedMoreInfo">Cần thêm thông tin</option>
-                            </select>
-                            <button type="submit" class="btn btn-sm btn-outline-primary">Cập nhật</button>
-                        </form>
+                    <div>
+                        <h5 class="fw-bold mb-0">@Model.GuestPreference.Booking.User.FullName</h5>
+                        <p class="text-muted small mb-0"><i class="bi bi-envelope me-1"></i> @Model.GuestPreference.Booking.User.Email</p>
                     </div>
                 </div>
-            }
-        }
-    </div>
-}
+                <hr class="my-3 opacity-25">
+                <div class="mb-2"><span class="text-muted small d-block">Phòng đặt</span> <strong>@Model.GuestPreference.Booking.RoomType.Name</strong></div>
+                <div class="mb-2"><span class="text-muted small d-block">Thời gian</span> <strong>@Model.GuestPreference.Booking.CheckInDate.ToString("dd/MM/yyyy") - @Model.GuestPreference.Booking.CheckOutDate.ToString("dd/MM/yyyy")</strong></div>
+            </div>
+        </div>
 
-<!-- Upsell Suggestions -->
-@if (Model.UpsellSuggestions.Any())
-{
-    <div class="card shadow-sm border-0 p-4 mb-4" style="border-radius:16px;">
-        <h5 class="fw-bold mb-3">Gợi ý dịch vụ cộng thêm</h5>
-        @foreach (var u in Model.UpsellSuggestions)
+        <!-- Card Tóm tắt AI -->
+        <div class="card shadow-sm border-0 mb-4" style="border-radius: 16px; background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%);">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h6 class="fw-bold text-success mb-0 text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;"><i class="bi bi-stars me-1"></i> AI Tóm tắt</h6>
+                    <span class="badge @priCls px-2 py-1 shadow-sm">Ưu tiên: @priText</span>
+                </div>
+                <p class="mb-0 fw-medium" style="color: #166534; line-height: 1.6; font-size: 0.95rem;">@Model.Summary</p>
+            </div>
+        </div>
+
+        <!-- Thông tin thô từ khách -->
+        <div class="card shadow-sm border-0" style="border-radius: 16px; background-color: #f8fafc;">
+            <div class="card-body p-4">
+                <h6 class="fw-bold text-muted mb-3 text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;"><i class="bi bi-chat-quote"></i> Khách hàng đã viết</h6>
+                <div class="p-3 bg-white border rounded shadow-sm text-muted" style="font-style: italic; font-size: 0.9rem;">
+                    "@(string.IsNullOrEmpty(Model.GuestPreference.RawText) ? "Không có ghi chú thêm." : Model.GuestPreference.RawText)"
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cột phải: Tasks & Tags -->
+    <div class="col-lg-8">
+        <!-- Tags Nhu Cầu -->
+        @if (Model.Tags.Any())
         {
-            <div class="border rounded p-3 mb-2">
-                <strong>@u.Title</strong> @if (u.EstimatedPrice.HasValue) { <span class="hms-price ms-2">@u.EstimatedPrice.Value.ToString("N0")₫</span> }
-                <p class="text-muted small mb-0">@u.Reason</p>
+            <div class="card shadow-sm border-0 mb-4" style="border-radius: 16px;">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold text-muted mb-3 text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Từ khóa nhu cầu chính</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var tag in Model.Tags)
+                        {
+                            var tagCls = tag.Category switch {
+                                HearMeStay.Models.Enums.TagCategory.Allergy=>"bg-danger text-white", HearMeStay.Models.Enums.TagCategory.FoodDiet=>"bg-success text-white",
+                                HearMeStay.Models.Enums.TagCategory.RoomPreference=>"bg-info text-dark", HearMeStay.Models.Enums.TagCategory.HealthNote=>"bg-danger text-white",
+                                HearMeStay.Models.Enums.TagCategory.SpecialOccasion=>"bg-warning text-dark", HearMeStay.Models.Enums.TagCategory.FamilyNeed=>"bg-primary text-white",
+                                HearMeStay.Models.Enums.TagCategory.ActivityInterest=>"bg-secondary text-white", _=>"bg-light text-dark" };
+                            var sevIcon = tag.Severity switch { HearMeStay.Models.Enums.SeverityLevel.High=>"🔥", HearMeStay.Models.Enums.SeverityLevel.Medium=>"⭐", _=>"✓" };
+                            <span class="badge @tagCls px-3 py-2 rounded-pill shadow-sm" style="font-size: 0.85rem; font-weight: 500;">@sevIcon @tag.TagName</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Việc cần làm theo bộ phận -->
+        <div class="card shadow-sm border-0 mb-4" style="border-radius: 16px;">
+            <div class="card-body p-4">
+                <h6 class="fw-bold text-muted mb-4 text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Tác vụ cần chuẩn bị (Phân bổ tự động)</h6>
+                
+                @if (Model.Tasks.Any())
+                {
+                    <div class="accordion" id="taskAccordion">
+                        @foreach (var dept in Model.Tasks.GroupBy(t => t.Department))
+                        {
+                            var deptName = dept.Key switch { HearMeStay.Models.Enums.Department.Reception=>"Lễ tân", HearMeStay.Models.Enums.Department.Housekeeping=>"Buồng phòng", HearMeStay.Models.Enums.Department.Kitchen=>"Bếp", HearMeStay.Models.Enums.Department.CustomerService=>"CSKH / Trải nghiệm", HearMeStay.Models.Enums.Department.Manager=>"Quản lý", _=>"Khác" };
+                            var deptIcon = dept.Key switch { HearMeStay.Models.Enums.Department.Reception=>"bi-front", HearMeStay.Models.Enums.Department.Housekeeping=>"bi-house-door", HearMeStay.Models.Enums.Department.Kitchen=>"bi-cup-hot", HearMeStay.Models.Enums.Department.CustomerService=>"bi-heart", HearMeStay.Models.Enums.Department.Manager=>"bi-briefcase", _=>"bi-list" };
+                            var deptId = $"dept_{dept.Key}";
+
+                            <div class="accordion-item border-0 mb-3 shadow-sm" style="border-radius: 12px; overflow: hidden;">
+                                <h2 class="accordion-header" id="heading_@deptId">
+                                    <button class="accordion-button fw-bold bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_@deptId" aria-expanded="true" aria-controls="collapse_@deptId" style="color: var(--navy-deep);">
+                                        <i class="bi @deptIcon me-2 text-teal"></i> Bộ phận @deptName <span class="badge bg-teal ms-auto rounded-pill">@dept.Count() việc</span>
+                                    </button>
+                                </h2>
+                                <div id="collapse_@deptId" class="accordion-collapse collapse show" aria-labelledby="heading_@deptId">
+                                    <div class="accordion-body bg-white p-0">
+                                        <ul class="list-group list-group-flush">
+                                            @foreach (var task in dept)
+                                            {
+                                                var tsCls = task.TaskStatus switch { HearMeStay.Models.Enums.GuestTaskStatus.Pending=>"bg-secondary", HearMeStay.Models.Enums.GuestTaskStatus.InProgress=>"bg-primary", HearMeStay.Models.Enums.GuestTaskStatus.Done=>"bg-success", HearMeStay.Models.Enums.GuestTaskStatus.CannotSupport=>"bg-danger", HearMeStay.Models.Enums.GuestTaskStatus.NeedMoreInfo=>"bg-warning text-dark", _=>"bg-secondary" };
+                                                var tsText = task.TaskStatus switch { HearMeStay.Models.Enums.GuestTaskStatus.Pending=>"Chờ xử lý", HearMeStay.Models.Enums.GuestTaskStatus.InProgress=>"Đang làm", HearMeStay.Models.Enums.GuestTaskStatus.Done=>"Hoàn tất", HearMeStay.Models.Enums.GuestTaskStatus.CannotSupport=>"Từ chối", HearMeStay.Models.Enums.GuestTaskStatus.NeedMoreInfo=>"Cần hỏi khách", _=>"" };
+                                                
+                                                <li class="list-group-item p-4">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-md-7">
+                                                            <h6 class="fw-bold mb-1">@task.Title</h6>
+                                                            <p class="text-muted small mb-0">@task.Description</p>
+                                                        </div>
+                                                        <div class="col-md-5 d-flex align-items-center justify-content-end gap-3 mt-3 mt-md-0">
+                                                            <span class="badge @tsCls px-2 py-1">@tsText</span>
+                                                            <form asp-action="UpdateTaskStatus" method="post" class="m-0">
+                                                                <input type="hidden" name="taskId" value="@task.Id" />
+                                                                <div class="input-group input-group-sm">
+                                                                    <select name="status" class="form-select text-muted" onchange="this.form.submit()" style="background-color: #f8fafc;">
+                                                                        <option value="" disabled selected>Đổi trạng thái...</option>
+                                                                        <option value="InProgress">Đang làm</option>
+                                                                        <option value="Done">Hoàn tất</option>
+                                                                        <option value="NeedMoreInfo">Cần hỏi thêm</option>
+                                                                        <option value="CannotSupport">Không hỗ trợ</option>
+                                                                    </select>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-check-circle fs-2 text-success mb-2 d-block"></i>
+                        Không có tác vụ đặc biệt nào cần chuẩn bị cho khách này.
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Upsell Suggestions -->
+        @if (Model.UpsellSuggestions.Any())
+        {
+            <div class="card shadow-sm border-0" style="border-radius: 16px; background-color: #fffbeb; border: 1px solid #fef3c7 !important;">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold text-warning-emphasis mb-4 text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;"><i class="bi bi-graph-up-arrow me-1"></i> Gợi ý bán chéo (Upsell) tự động</h6>
+                    <div class="row g-3">
+                        @foreach (var u in Model.UpsellSuggestions)
+                        {
+                            <div class="col-md-6">
+                                <div class="p-3 bg-white rounded shadow-sm h-100" style="border-left: 3px solid #f59e0b;">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <strong class="text-dark">@u.Title</strong>
+                                        @if (u.EstimatedPrice.HasValue) { <span class="badge bg-warning text-dark">@u.EstimatedPrice.Value.ToString("N0")₫</span> }
+                                    </div>
+                                    <p class="text-muted small mb-0">Lý do: @u.Reason</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
             </div>
         }
     </div>
-}
-
-<!-- Guest Shared Info -->
-<div class="card shadow-sm border-0 p-4 mb-4" style="border-radius:16px;">
-    <h5 class="fw-bold mb-3">Thông tin khách đã chia sẻ</h5>
-    @if (!string.IsNullOrEmpty(Model.GuestPreference.RawText)) { <p><strong>Ghi chú:</strong> @Model.GuestPreference.RawText</p> }
-    @if (Model.GuestPreference.HasFoodAllergy) { <p><strong>Dị ứng:</strong> @Model.GuestPreference.FoodAllergyDetail</p> }
-    @if (!string.IsNullOrEmpty(Model.GuestPreference.DietPreference)) { <p><strong>Chế độ ăn:</strong> @Model.GuestPreference.DietPreference</p> }
-    @if (!string.IsNullOrEmpty(Model.GuestPreference.RoomPreference)) { <p><strong>Yêu cầu phòng:</strong> @Model.GuestPreference.RoomPreference</p> }
-    @if (!string.IsNullOrEmpty(Model.GuestPreference.HealthNote)) { <p><strong>Sức khỏe:</strong> @Model.GuestPreference.HealthNote</p> }
-    @if (!string.IsNullOrEmpty(Model.GuestPreference.SpecialOccasion)) { <p><strong>Dịp đặc biệt:</strong> @Model.GuestPreference.SpecialOccasion</p> }
 </div>
-
-<a asp-action="Index" class="btn btn-outline-secondary">Quay lại danh sách</a>

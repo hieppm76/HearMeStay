@@ -27,6 +27,29 @@ namespace HearMeStay.Services
 
             var nights = (booking.CheckOutDate - booking.CheckInDate).Days;
             var roomType = await _context.RoomTypes.FindAsync(booking.RoomTypeId);
+            var accommodation = await _context.Accommodations.FindAsync(booking.AccommodationId);
+
+            if (accommodation != null)
+            {
+                // Lấy gói dịch vụ đang kích hoạt của đối tác
+                var activeSub = await _context.PartnerSubscriptions
+                    .Include(s => s.SubscriptionPlan)
+                    .Where(s => s.PartnerId == accommodation.OwnerId && s.Status == SubscriptionStatus.Active && s.EndDate >= DateTime.Now)
+                    .OrderByDescending(s => s.StartDate)
+                    .FirstOrDefaultAsync();
+
+                if (activeSub != null && activeSub.SubscriptionPlan != null)
+                {
+                    booking.CommissionRate = (decimal)(activeSub.SubscriptionPlan.CommissionRate / 100.0);
+                }
+                else
+                {
+                    // Mặc định lấy gói Free Listing nếu chưa có gói nào
+                    var freePlan = await _context.SubscriptionPlans.FirstOrDefaultAsync(p => p.Name == "Free Listing");
+                    booking.CommissionRate = freePlan != null ? (decimal)(freePlan.CommissionRate / 100.0) : 0.15m;
+                }
+            }
+
             if (roomType != null)
             {
                 booking.TotalAmount = CalculateTotalAmount(roomType.PricePerNight, booking.CheckInDate, booking.CheckOutDate, booking.NumberOfRooms);
@@ -37,7 +60,6 @@ namespace HearMeStay.Services
             await _context.SaveChangesAsync();
 
             // Notify hotel partner
-            var accommodation = await _context.Accommodations.FindAsync(booking.AccommodationId);
             if (accommodation != null)
             {
                 await _notificationService.CreateNotificationAsync(

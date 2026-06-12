@@ -56,20 +56,24 @@ namespace HearMeStay.Areas.Partner.Controllers
         public async Task<IActionResult> Payment(int id)
         {
             var userId = _userManager.GetUserId(User);
-            // Need to verify this payment belongs to the user, skipped for brevity but would usually do this
-            // We just need the payment details
-            // I'll just pass the ID to the view, the view can fetch or we can pass a model
+            var payment = await _subscriptionService.GetPaymentByIdAsync(id);
+            if (payment == null || payment.PartnerSubscription.PartnerId != userId) return NotFound();
+            
             ViewBag.PaymentId = id;
-            return View();
+            return View(payment);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitPayment(int id, string? proofImageUrl)
         {
-            // Hardcoded QR and Transfer content for demo
+            var userId = _userManager.GetUserId(User);
+            var payment = await _subscriptionService.GetPaymentByIdAsync(id);
+            if (payment == null || payment.PartnerSubscription.PartnerId != userId) return NotFound();
+
             string transferContent = $"HMSPK{id}";
-            string qrUrl = $"https://img.vietqr.io/image/970423-81655940116-compact2.png?amount=10000&addInfo={transferContent}&accountName=TO%20CHINH%20TU";
+            long amountInt = (long)payment.Amount;
+            string qrUrl = $"https://img.vietqr.io/image/970423-81655940116-compact2.png?amount={amountInt}&addInfo={transferContent}&accountName=TO%20CHINH%20TU";
             
             bool result = await _subscriptionService.SubmitPaymentProofAsync(id, qrUrl, transferContent, proofImageUrl);
             if (result)

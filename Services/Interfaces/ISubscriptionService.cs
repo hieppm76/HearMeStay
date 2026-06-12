@@ -11,6 +11,7 @@ namespace HearMeStay.Services.Interfaces
         Task<PartnerSubscription?> GetActiveSubscriptionAsync(string partnerId);
         Task<PartnerSubscription> CreateSubscriptionAsync(string partnerId, int planId);
         Task<SubscriptionPayment> CreatePaymentAsync(int subscriptionId, string method);
+        Task<SubscriptionPayment?> GetPaymentByIdAsync(int id);
         Task<bool> SubmitPaymentProofAsync(int paymentId, string qrImageUrl, string transferContent, string? proofImageUrl);
         Task<bool> VerifyPaymentAsync(int paymentId, string adminId);
         Task<bool> RejectPaymentAsync(int paymentId, string adminId);

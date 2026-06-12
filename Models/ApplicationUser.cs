@@ -27,5 +27,6 @@ namespace HearMeStay.Models
         public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
         public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
         public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+        public virtual UserPreferenceProfile? PreferenceProfile { get; set; }
     }
 }

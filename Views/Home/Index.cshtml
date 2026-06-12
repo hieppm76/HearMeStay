@@ -41,7 +41,19 @@
         <form asp-controller="Accommodations" asp-action="Index" method="get" class="row g-3 align-items-end">
             <div class="col-lg-3 col-md-6">
                 <label class="form-label">Điểm đến</label>
-                <input type="text" name="City" class="form-control" placeholder="Bạn muốn đi đâu?" />
+                <input type="text" name="City" list="cityList" class="form-control" placeholder="Thành phố, tỉnh..." autocomplete="off" />
+                <datalist id="cityList">
+                    <option value="Hà Nội"></option>
+                    <option value="Hồ Chí Minh"></option>
+                    <option value="Đà Nẵng"></option>
+                    <option value="Đà Lạt"></option>
+                    <option value="Nha Trang"></option>
+                    <option value="Phú Quốc"></option>
+                    <option value="Hạ Long"></option>
+                    <option value="Vũng Tàu"></option>
+                    <option value="Sapa"></option>
+                    <option value="Hội An"></option>
+                </datalist>
             </div>
             <div class="col-lg-2 col-md-3"><label class="form-label">Nhận phòng</label><input type="date" name="CheckIn" class="form-control" /></div>
             <div class="col-lg-2 col-md-3"><label class="form-label">Trả phòng</label><input type="date" name="CheckOut" class="form-control" /></div>

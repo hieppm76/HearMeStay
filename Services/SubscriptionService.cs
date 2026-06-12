@@ -79,6 +79,14 @@ namespace HearMeStay.Services
             return payment;
         }
 
+        public async Task<SubscriptionPayment?> GetPaymentByIdAsync(int id)
+        {
+            return await _context.SubscriptionPayments
+                .Include(p => p.PartnerSubscription)
+                .ThenInclude(s => s.SubscriptionPlan)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
         public async Task<bool> SubmitPaymentProofAsync(int paymentId, string qrImageUrl, string transferContent, string? proofImageUrl)
         {
             var payment = await _context.SubscriptionPayments.Include(p => p.PartnerSubscription).FirstOrDefaultAsync(p => p.Id == paymentId);

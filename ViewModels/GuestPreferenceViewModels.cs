@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using HearMeStay.Models;
 
 namespace HearMeStay.ViewModels
 {
@@ -46,6 +47,14 @@ namespace HearMeStay.ViewModels
 
         [Display(Name = "Đồng ý chia sẻ thông tin với nơi lưu trú")]
         public bool ConsentToShareWithHotel { get; set; }
+
+        [Display(Name = "Lưu các sở thích này vào Hồ sơ của tôi cho các chuyến đi sau")]
+        public bool SaveToProfile { get; set; }
+
+        [Display(Name = "Đồng ý lưu thông tin sức khỏe (Dị ứng, y tế) vào hồ sơ lâu dài")]
+        public bool ConsentToStoreHealthNotes { get; set; }
+
+        public UserPreferenceProfile? SavedProfile { get; set; }
     }
 
     public class ReviewCreateViewModel

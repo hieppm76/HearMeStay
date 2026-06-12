@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using HearMeStay.Models;
 using HearMeStay.Models.Enums;
 
@@ -44,7 +44,7 @@ namespace HearMeStay.Data
                 var p1 = new ApplicationUser
                 {
                     UserName = partner1Email, Email = partner1Email,
-                    FullName = "Nguyễn Văn HA�ng", EmailConfirmed = true,
+                    FullName = "Nguyễn Văn Hoàng", EmailConfirmed = true,
                     IsActive = true, CreatedAt = DateTime.Now
                 };
                 await userManager.CreateAsync(p1, "Partner@123");
@@ -71,7 +71,7 @@ namespace HearMeStay.Data
                 var t1 = new ApplicationUser
                 {
                     UserName = traveler1Email, Email = traveler1Email,
-                    FullName = "LA� Minh Tuấn", EmailConfirmed = true,
+                    FullName = "Lê Minh Tuấn", EmailConfirmed = true,
                     IsActive = true, CreatedAt = DateTime.Now
                 };
                 await userManager.CreateAsync(t1, "Traveler@123");
@@ -96,9 +96,9 @@ namespace HearMeStay.Data
             {
                 var plans = new List<SubscriptionPlan>
                 {
-                    new SubscriptionPlan { Name = "Free Listing", PricePerMonth = 0, CommissionRate = 12.0, Features = "Đăng tối đa 1 nơi lưu trA,PhAn tAch AI cơ bản,Nhận booking cơ bản" },
-                    new SubscriptionPlan { Name = "Professional", PricePerMonth = 1499000, CommissionRate = 8.0, Features = "KhAng giới hạn nơi lưu trA,PhAn tAch AI chuyAn sAu,Xuất bAo cAo doanh thu chi tiết,Hỗ trợ ưu tiAn 24/7" },
-                    new SubscriptionPlan { Name = "Premium", PricePerMonth = 4999000, CommissionRate = 3.0, Features = "Tất cả của gAi Pro,Hỗ trợ marketing đa kAnh,TAy chỉnh luồng booking,TAch hợp API hệ thống PMS riAng" }
+                    new SubscriptionPlan { Name = "Free Listing", PricePerMonth = 0, CommissionRate = 15.0, Features = "Đăng tối đa 1 nơi lưu trú,Phân tích AI cơ bản,Nhận booking cơ bản" },
+                    new SubscriptionPlan { Name = "Professional", PricePerMonth = 1499000, CommissionRate = 5.0, Features = "Đăng tối đa 5 nơi lưu trú,AI phân tích nhu cầu khách chuyên sâu,Tự động tạo tag & task cho từng bộ phận,Báo cáo booking và trải nghiệm khách" },
+                    new SubscriptionPlan { Name = "Premium", PricePerMonth = 4999000, CommissionRate = 2.0, Features = "Không giới hạn nơi lưu trú & phòng,Ưu tiên hiển thị trên HearMeStay,Tùy chỉnh luồng booking riêng,Tích hợp API/PMS và hỗ trợ 24/7" }
                 };
                 context.SubscriptionPlans.AddRange(plans);
                 await context.SaveChangesAsync();
@@ -521,11 +521,13 @@ namespace HearMeStay.Data
 
 
                 // Seed sample bookings
-                var t1 = await userManager.FindByEmailAsync(traveler1Email);
-                var t2 = await userManager.FindByEmailAsync(traveler2Email);
-                if (t1 != null && t2 != null)
+                if (!context.Bookings.Any())
                 {
-                    var booking1 = new Booking
+                    var t1 = await userManager.FindByEmailAsync(traveler1Email);
+                    var t2 = await userManager.FindByEmailAsync(traveler2Email);
+                    if (t1 != null && t2 != null)
+                    {
+                        var booking1 = new Booking
                     {
                         BookingCode = "HMS2026010100001",
                         UserId = t1.Id, AccommodationId = acc1.Id, RoomTypeId = room1.Id,
@@ -562,7 +564,7 @@ namespace HearMeStay.Data
                     var pref1 = new GuestPreference
                     {
                         BookingId = booking1.Id,
-                        RawText = "ChA�ng tA�i kỷ niệm 5 năm ngA�y cưới. Vợ tA�i bị dị ứng hải sản. Muốn phA�ng yA�n tĩnh vA� cần đưa đA�n sA�n bay.",
+                        RawText = "ChA�ng tA�i kỷ niệm 5 năm ngA�y cưới. Vợ tA�i bị dị ứng hải sản. Muốn phA�ng yA�n tĩnh và� cần đưa đA�n sA�n bay.",
                         HasFoodAllergy = true, FoodAllergyDetail = "Dị ứng hải sản",
                         DietPreference = "KhA�ng hải sản", RoomPreference = "PhA�ng yA�n tĩnh, tầng cao",
                         SpecialOccasion = "Kỷ niệm 5 năm ngA�y cưới",
@@ -572,9 +574,9 @@ namespace HearMeStay.Data
                     var pref2 = new GuestPreference
                     {
                         BookingId = booking2.Id,
-                        RawText = "TA�i ăn chay trường. Muốn phA�ng khA�ng cA� mA�i nồng, trA�nh tinh dầu mạnh.",
+                        RawText = "TAi ăn chay trường. Muốn phAng khAng cA mAi nồng, trính tinh dầu mạnh.",
                         DietPreference = "Ăn chay trường (vegan)",
-                        RoomPreference = "KhA�ng mA�i nồng, khA�ng tinh dầu mạnh",
+                        RoomPreference = "KhAng mAi nồng, khAng tinh dầu mạnh",
                         TravelPurpose = "Nghỉ ngơi cuối tuần",
                         ConsentToShareWithHotel = true, AiProcessedAt = DateTime.Now
                     };
@@ -585,13 +587,13 @@ namespace HearMeStay.Data
                     var insight1 = new GuestInsight
                     {
                         GuestPreferenceId = pref1.Id,
-                        Summary = "KhA�ch kỷ niệm 5 năm ngA�y cưới. Vợ dị ứng hải sản (ưu tiA�n cao). Cần phA�ng yA�n tĩnh, đưa đA�n sA�n bay vA� trang trA� phA�ng.",
+                        Summary = "KhA�ch kỷ niệm 5 năm ngA�y cưới. Vợ dị ứng hải sản (ưu tiA�n cao). Cần phA�ng yA�n tĩnh, đưa đA�n sA�n bay và� trang trí� phA�ng.",
                         PriorityLevel = PriorityLevel.High
                     };
                     var insight2 = new GuestInsight
                     {
                         GuestPreferenceId = pref2.Id,
-                        Summary = "KhA�ch ăn chay trường, nhạy cảm với mA�i. Cần chuẩn bị menu chay vA� phA�ng khA�ng mA�i nồng.",
+                        Summary = "KhA�ch ăn chay trường, nhạy cảm với mA�i. Cần chuẩn bị menu chay và� phA�ng khA�ng mA�i nồng.",
                         PriorityLevel = PriorityLevel.Medium
                     };
                     context.GuestInsights.AddRange(insight1, insight2);
@@ -609,7 +611,7 @@ namespace HearMeStay.Data
                     // Seed Tasks
                     context.GuestTasks.AddRange(
                         new GuestTask { GuestInsightId = insight1.Id, Department = Department.Kitchen, Title = "Chuẩn bị menu khA�ng hải sản", Description = "Vợ khA�ch dị ứng hải sản. Loại bỏ toA�n bộ hải sản khỏi bữa ăn." },
-                        new GuestTask { GuestInsightId = insight1.Id, Department = Department.CustomerService, Title = "Trang trA� phA�ng kỷ niệm", Description = "KhA�ch kỷ niệm 5 năm ngA�y cưới. Chuẩn bị hoa, nến vA� rượu." },
+                        new GuestTask { GuestInsightId = insight1.Id, Department = Department.CustomerService, Title = "Trang trí� phA�ng kỷ niệm", Description = "KhA�ch kỷ niệm 5 năm ngA�y cưới. Chuẩn bị hoa, nến và� rượu." },
                         new GuestTask { GuestInsightId = insight1.Id, Department = Department.Reception, Title = "Sắp xếp phA�ng yA�n tĩnh tầng cao", Description = "KhA�ch yA�u cầu phA�ng yA�n tĩnh, ưu tiA�n tầng cao." },
                         new GuestTask { GuestInsightId = insight2.Id, Department = Department.Kitchen, Title = "Chuẩn bị menu chay", Description = "KhA�ch ăn chay trường. Chuẩn bị menu hoA�n toA�n từ thực vật." },
                         new GuestTask { GuestInsightId = insight2.Id, Department = Department.Housekeeping, Title = "PhA�ng khA�ng mA�i nồng", Description = "KhA�ng dA�ng tinh dầu mạnh, nước xịt phA�ng. KhA�ch nhạy cảm với mA�i." }
@@ -617,7 +619,7 @@ namespace HearMeStay.Data
 
                     // Seed UpsellSuggestions
                     context.UpsellSuggestions.AddRange(
-                        new UpsellSuggestion { GuestInsightId = insight1.Id, Title = "Trang trA� phA�ng kỷ niệm", Reason = "KhA�ch kỷ niệm 5 năm ngA�y cưới", EstimatedPrice = 800000, Status = UpsellStatus.Suggested },
+                        new UpsellSuggestion { GuestInsightId = insight1.Id, Title = "Trang trí� phA�ng kỷ niệm", Reason = "KhA�ch kỷ niệm 5 năm ngA�y cưới", EstimatedPrice = 800000, Status = UpsellStatus.Suggested },
                         new UpsellSuggestion { GuestInsightId = insight1.Id, Title = "Đưa đA�n sA�n bay", Reason = "KhA�ch yA�u cầu đưa đA�n sA�n bay", EstimatedPrice = 1200000, Status = UpsellStatus.Suggested }
                     );
 
@@ -628,3 +630,5 @@ namespace HearMeStay.Data
     }
 }
 
+
+}

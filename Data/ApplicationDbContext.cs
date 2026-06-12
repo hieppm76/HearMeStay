@@ -30,6 +30,8 @@ namespace HearMeStay.Data
         public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
         public DbSet<PartnerSubscription> PartnerSubscriptions { get; set; }
         public DbSet<SubscriptionPayment> SubscriptionPayments { get; set; }
+        public DbSet<UserPreferenceProfile> UserPreferenceProfiles { get; set; }
+        public DbSet<UserPreferenceTag> UserPreferenceTags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

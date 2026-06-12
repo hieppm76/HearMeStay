@@ -45,11 +45,14 @@ namespace HearMeStay.Controllers
             if (booking.GuestPreference != null)
                 return RedirectToAction("Details", new { bookingId });
 
+            var profile = await _context.UserPreferenceProfiles.FirstOrDefaultAsync(p => p.UserId == userId && p.IsActive);
+
             var model = new GuestPreferenceCreateViewModel
             {
                 BookingId = booking.Id,
                 BookingCode = booking.BookingCode,
-                AccommodationName = booking.Accommodation.Name
+                AccommodationName = booking.Accommodation.Name,
+                SavedProfile = profile
             };
             return View(model);
         }
@@ -100,6 +103,59 @@ namespace HearMeStay.Controllers
                 "Khách đã chia sẻ nhu cầu cá nhân",
                 $"Khách đặt phòng #{booking.BookingCode} đã điền form nhu cầu. Xem Guest Insight để chuẩn bị.",
                 "PreferenceSubmitted");
+
+            // Xử lý lưu hồ sơ sở thích
+            if (model.SaveToProfile)
+            {
+                var profile = await _context.UserPreferenceProfiles.FirstOrDefaultAsync(p => p.UserId == userId);
+                if (profile == null)
+                {
+                    profile = new UserPreferenceProfile { UserId = userId, IsActive = true };
+                    _context.UserPreferenceProfiles.Add(profile);
+                }
+
+                var raw = model.RawText ?? "";
+                
+                var foodPrefs = new List<string>();
+                if (raw.Contains("Tôi ăn chay")) foodPrefs.Add("Tôi ăn chay");
+                if (raw.Contains("Tôi không ăn đồ cay")) foodPrefs.Add("Tôi không ăn đồ cay");
+                if (raw.Contains("Tôi cần bữa sáng phù hợp")) foodPrefs.Add("Tôi cần bữa sáng phù hợp");
+                profile.FoodPreferences = foodPrefs.Any() ? string.Join(", ", foodPrefs) : null;
+
+                if (raw.Contains("Tôi dị ứng hải sản")) profile.AllergyNotes = "Tôi dị ứng hải sản";
+
+                var roomPrefs = new List<string>();
+                if (raw.Contains("Tôi muốn phòng yên tĩnh")) roomPrefs.Add("Tôi muốn phòng yên tĩnh");
+                if (raw.Contains("Tôi không thích mùi hương mạnh")) roomPrefs.Add("Tôi không thích mùi hương mạnh");
+                if (raw.Contains("Tôi muốn giường lớn")) roomPrefs.Add("Tôi muốn giường lớn");
+                if (raw.Contains("Tôi muốn phòng có ánh sáng tự nhiên")) roomPrefs.Add("Tôi muốn phòng có ánh sáng tự nhiên");
+                profile.RoomPreferences = roomPrefs.Any() ? string.Join(", ", roomPrefs) : null;
+                
+                var services = new List<string>();
+                if (raw.Contains("Cần trang trí phòng")) services.Add("Cần trang trí phòng");
+                if (raw.Contains("Cần đưa đón sân bay")) services.Add("Cần đưa đón sân bay");
+                if (raw.Contains("Muốn ăn BBQ")) services.Add("Muốn ăn BBQ");
+                if (raw.Contains("Cần Spa")) services.Add("Cần Spa");
+                if (raw.Contains("Muốn đi tour địa phương")) services.Add("Muốn đi tour địa phương");
+                profile.ServicePreferences = services.Any() ? string.Join(", ", services) : null;
+                
+                profile.ActivityInterests = null;
+                profile.ConsentToShareWithHotel = model.ConsentToShareWithHotel;
+
+                if (model.ConsentToStoreHealthNotes)
+                {
+                    profile.HealthNotes = model.HealthNote;
+                    profile.ConsentToStoreHealthNotes = true;
+                }
+                else
+                {
+                    profile.HealthNotes = null;
+                    profile.ConsentToStoreHealthNotes = false;
+                }
+
+                profile.UpdatedAt = DateTime.Now;
+                await _context.SaveChangesAsync();
+            }
 
             TempData["Success"] = "Thông tin của bạn đã được gửi. Nơi lưu trú sẽ chuẩn bị dựa trên nhu cầu phù hợp.";
             return RedirectToAction("Details", new { bookingId = model.BookingId });

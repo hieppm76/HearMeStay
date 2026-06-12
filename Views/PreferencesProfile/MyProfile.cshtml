@@ -1,0 +1,99 @@
+@model HearMeStay.Models.UserPreferenceProfile
+@{ ViewData["Title"] = "Hồ sơ sở thích của tôi"; }
+<div style="padding-top:100px;"></div>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h3 class="mb-4"><i class="bi bi-person-lines-fill me-2 text-primary"></i>Hồ sơ sở thích của tôi</h3>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">@TempData["Success"]</div>
+            }
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <p class="text-muted">Lưu lại các sở thích cá nhân của bạn để chúng tôi có thể tự động điền thông tin cho những lần đặt phòng tiếp theo.</p>
+
+                    @if (Model == null)
+                    {
+                        <div class="alert alert-warning">
+                            Bạn chưa có hồ sơ sở thích nào. Khi bạn đặt phòng và điền biểu mẫu "Chia sẻ nhu cầu cá nhân", hệ thống sẽ tự động tạo hồ sơ nếu bạn cho phép.
+                        </div>
+                    }
+                    else
+                    {
+                        <form asp-action="Update" method="post">
+                            <input type="hidden" asp-for="Id" />
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Ăn uống</label>
+                                    <input asp-for="FoodPreferences" class="form-control" placeholder="VD: Ăn chay, Không ăn cay" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Dị ứng</label>
+                                    <input asp-for="AllergyNotes" class="form-control" placeholder="VD: Dị ứng hải sản" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Thói quen phòng</label>
+                                    <input asp-for="RoomPreferences" class="form-control" placeholder="VD: Phòng yên tĩnh, tầng cao" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Dịch vụ quan tâm</label>
+                                    <input asp-for="ServicePreferences" class="form-control" placeholder="VD: Spa, Đưa đón sân bay" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label fw-bold">Sở thích hoạt động</label>
+                                    <input asp-for="ActivityInterests" class="form-control" placeholder="VD: Khám phá ẩm thực, Tour văn hóa" />
+                                </div>
+                                <hr />
+                                <div class="col-md-12">
+                                    <label class="form-label fw-bold">Ghi chú y tế / sức khỏe (Bảo mật)</label>
+                                    <input asp-for="HealthNotes" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-check">
+                                        <input asp-for="ConsentToStoreHealthNotes" class="form-check-input" />
+                                        <label asp-for="ConsentToStoreHealthNotes" class="form-check-label">Tôi đồng ý lưu lại các Ghi chú y tế và Dị ứng sức khỏe vào hồ sơ lâu dài.</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input asp-for="IsActive" class="form-check-input" />
+                                        <label asp-for="IsActive" class="form-check-label">Kích hoạt hồ sơ (Sử dụng cho các lần đặt phòng sau)</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 d-flex gap-2">
+                                <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Cập nhật hồ sơ</button>
+                                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="bi bi-trash me-1"></i> Xóa hồ sơ</button>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model != null)
+{
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Xóa hồ sơ sở thích</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Bạn có chắc chắn muốn xóa toàn bộ hồ sơ sở thích này không? Hành động này không thể hoàn tác.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <form asp-action="Delete" method="post">
+                        <button type="submit" class="btn btn-danger">Xóa hồ sơ</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}

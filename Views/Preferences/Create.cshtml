@@ -2,20 +2,22 @@
 @{ ViewData["Title"] = "Chia sẻ nhu cầu cá nhân"; }
 <div style="padding-top:100px;"></div>
 <div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-7">
-            <div class="text-center mb-4 fade-up">
-                <div class="hms-step-icon mx-auto mb-3" style="width:60px;height:60px;background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;"><i class="bi bi-chat-heart" style="font-size:1.3rem;"></i></div>
-                <h2 class="hms-section-title">Chia sẻ nhu cầu cá nhân của bạn</h2>
-                <p class="hms-section-sub">Thông tin này giúp nơi lưu trú chuẩn bị tốt hơn trước khi bạn đến.</p>
-                <p class="text-muted small">Đặt phòng <strong>#@Model.BookingCode</strong> — @Model.AccommodationName</p>
-            </div>
-            <form asp-action="Create" method="post" id="preferenceForm">
-                <input type="hidden" asp-for="BookingId" />
-                <input type="hidden" asp-for="RawText" id="finalRawText" />
-                
-                <div asp-validation-summary="All" class="text-danger mb-3"></div>
-                
+    <div class="text-center mb-4 fade-up">
+        <div class="hms-step-icon mx-auto mb-3" style="width:60px;height:60px;background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;"><i class="bi bi-chat-heart" style="font-size:1.3rem;"></i></div>
+        <h2 class="hms-section-title">Chia sẻ nhu cầu cá nhân của bạn</h2>
+        <p class="hms-section-sub">Thông tin này giúp nơi lưu trú chuẩn bị tốt hơn trước khi bạn đến.</p>
+        <p class="text-muted small">Đặt phòng <strong>#@Model.BookingCode</strong> — @Model.AccommodationName</p>
+    </div>
+
+    <form asp-action="Create" method="post" id="preferenceForm">
+        <input type="hidden" asp-for="BookingId" />
+        <input type="hidden" asp-for="RawText" id="finalRawText" />
+        
+        <div asp-validation-summary="All" class="text-danger mb-3 text-center"></div>
+
+        <div class="row g-4 justify-content-center">
+            <!-- Left Column: Preferences -->
+            <div class="col-lg-7">
                 <!-- 1. Ăn uống & dị ứng -->
                 <div class="hms-form-section fade-up">
                     <div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#FEE2E2;color:#991B1B;">🍽️</div><h6 class="hms-form-section-title">Ăn uống & dị ứng</h6></div>
@@ -60,7 +62,7 @@
                         <div class="col-md-6"><div class="form-check"><input class="form-check-input pref-checkbox fee-trigger" type="checkbox" value="Muốn đi tour địa phương" id="chkSvc5"><label class="form-check-label" for="chkSvc5">Tour địa phương</label></div></div>
                     </div>
                     <div id="feeWarningAlert" class="alert alert-warning mt-3 mb-0 d-none" style="font-size: .85rem; background-color: #fff3cd; border-color: #ffe69c;">
-                        <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i><strong>Lưu ý:</strong> Một số dịch vụ hoặc yêu cầu bạn vừa chọn (Trang trí phòng, Đưa đón, BBQ...) có thể phát sinh thêm phụ phí. Nơi lưu trú sẽ kiểm tra và thông báo chính xác số tiền phụ phí (nếu có) trước khi bạn thanh toán.
+                        <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i><strong>Lưu ý:</strong> Một số dịch vụ hoặc yêu cầu bạn vừa chọn có thể phát sinh thêm phụ phí. Nơi lưu trú sẽ kiểm tra và thông báo chính xác số tiền (nếu có).
                     </div>
                 </div>
 
@@ -69,26 +71,63 @@
                     <div class="hms-form-section-header"><div class="hms-form-section-icon" style="background:#F3E8FF;color:#6B21A8;">📝</div><h6 class="hms-form-section-title">Ghi chú thêm</h6></div>
                     <textarea id="freeText" class="form-control" rows="3" placeholder="Ví dụ: Mình ăn chay, không thích mùi tinh dầu, muốn phòng yên tĩnh và đi kỷ niệm 2 năm."></textarea>
                 </div>
+            </div>
 
-                <div class="alert alert-info fade-up" style="font-size: .88rem;">
-                    <i class="bi bi-info-circle-fill me-2"></i>Đây là bước gửi yêu cầu đặt phòng và chia sẻ nhu cầu cá nhân đến nơi lưu trú. Booking chỉ được giữ và chuyển sang bước thanh toán sau khi nơi lưu trú xác nhận còn phòng. Nếu nơi lưu trú không còn phòng hoặc không thể đáp ứng yêu cầu đặc biệt, HearMeStay sẽ hỗ trợ gợi ý lựa chọn phù hợp hơn cho bạn.
-                </div>
+            <!-- Right Column: Confirmations & Submit -->
+            <div class="col-lg-4">
+                <div class="sticky-top" style="top: 100px;">
+                    
+                    @if (Model.SavedProfile != null)
+                    {
+                        <div class="alert alert-success mb-4 fade-up shadow-sm border-0" id="savedProfileCard" style="background-color: #f0fdf4;">
+                            <h6 class="alert-heading fw-bold mb-3"><i class="bi bi-person-hearts me-2 text-success"></i>Hồ sơ sở thích của bạn</h6>
+                            <p class="mb-3 small text-muted">Chúng tôi tìm thấy hồ sơ của bạn từ các chuyến đi trước. Bạn có muốn dùng lại không?</p>
+                            
+                            <div class="d-grid gap-2 mb-3">
+                                <button type="button" class="btn btn-success btn-sm" onclick="useSavedProfile()"><i class="bi bi-check2-circle me-1"></i> Dùng lại hồ sơ này</button>
+                                <button type="button" class="btn btn-outline-success btn-sm" onclick="editSavedProfile()"><i class="bi bi-pencil me-1"></i> Chỉnh sửa trước khi gửi</button>
+                            </div>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-link text-muted small text-decoration-none p-0" onclick="ignoreSavedProfile()"><i class="bi bi-x-circle me-1"></i> Không dùng cho chuyến này</button>
+                            </div>
 
-                <div class="hms-form-section fade-up" style="background:var(--teal-pale);border-color:rgba(13,148,136,.2);">
-                    <div class="form-check">
-                        <input asp-for="ConsentToShareWithHotel" class="form-check-input" />
-                        <label asp-for="ConsentToShareWithHotel" class="form-check-label fw-bold">Tôi đồng ý chia sẻ thông tin này với nơi lưu trú để họ chuẩn bị dịch vụ phù hợp.</label>
-                        <span asp-validation-for="ConsentToShareWithHotel" class="text-danger d-block small"></span>
+                            <input type="hidden" id="savedFoodPref" value="@Model.SavedProfile.FoodPreferences" />
+                            <input type="hidden" id="savedRoomPref" value="@Model.SavedProfile.RoomPreferences" />
+                            <input type="hidden" id="savedServicePref" value="@Model.SavedProfile.ServicePreferences" />
+                            <input type="hidden" id="savedAllergy" value="@Model.SavedProfile.AllergyNotes" />
+                        </div>
+                    }
+
+                    <div class="alert alert-info fade-up border-0 shadow-sm" style="font-size: .88rem; background-color: #eff6ff; color: #1e40af;">
+                        <i class="bi bi-info-circle-fill me-2"></i>Đây là bước gửi yêu cầu và chia sẻ nhu cầu cá nhân đến nơi lưu trú. Booking chỉ được giữ và chuyển sang bước thanh toán sau khi nơi lưu trú xác nhận.
+                    </div>
+
+                    <div class="hms-form-section fade-up shadow-sm" style="background:var(--teal-pale);border-color:rgba(13,148,136,.2);">
+                        <h6 class="fw-bold mb-3" style="color: var(--teal-deep);"><i class="bi bi-shield-check me-2"></i>Xác nhận & Bảo mật</h6>
+                        <div class="form-check mb-3">
+                            <input asp-for="ConsentToShareWithHotel" class="form-check-input" />
+                            <label asp-for="ConsentToShareWithHotel" class="form-check-label fw-bold" style="font-size: 0.9rem;">Tôi đồng ý chia sẻ thông tin này với nơi lưu trú để họ chuẩn bị dịch vụ.</label>
+                            <span asp-validation-for="ConsentToShareWithHotel" class="text-danger d-block small"></span>
+                        </div>
+                        <hr style="opacity: 0.15;" />
+                        <div class="form-check mb-3">
+                            <input asp-for="SaveToProfile" class="form-check-input" checked />
+                            <label asp-for="SaveToProfile" class="form-check-label" style="font-size: 0.9rem;">Lưu vào <a href="/PreferencesProfile/MyProfile" target="_blank" class="text-teal">Hồ sơ của tôi</a> cho các chuyến đi sau (tránh phải nhập lại nhiều lần).</label>
+                        </div>
+                        <div class="form-check">
+                            <input asp-for="ConsentToStoreHealthNotes" class="form-check-input" />
+                            <label asp-for="ConsentToStoreHealthNotes" class="form-check-label text-muted" style="font-size:0.85rem;">Tôi đồng ý lưu lại các Ghi chú y tế và Dị ứng sức khỏe vào hồ sơ lâu dài.</label>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4 fade-up">
+                        <button type="submit" class="btn btn-primary btn-lg shadow-sm"><i class="bi bi-send me-2"></i>Gửi yêu cầu</button>
+                        <a asp-controller="Bookings" asp-action="MyBookings" class="btn btn-outline-secondary">Bỏ qua bước này</a>
                     </div>
                 </div>
-
-                <div class="d-flex gap-2 mt-3 fade-up">
-                    <button type="submit" class="btn btn-primary btn-lg flex-grow-1"><i class="bi bi-send me-1"></i>Gửi yêu cầu đặt phòng</button>
-                    <a asp-controller="Bookings" asp-action="MyBookings" class="btn btn-outline-secondary btn-lg">Bỏ qua</a>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
+    </form>
 </div>
 
 @section Scripts {
@@ -111,6 +150,58 @@
             // Set to hidden RawText
             document.getElementById('finalRawText').value = combinedText.join('. ');
         });
+
+        // Handle Saved Profile
+        function fillSavedPreferences() {
+            const foodPref = document.getElementById('savedFoodPref').value;
+            const roomPref = document.getElementById('savedRoomPref').value;
+            const servicePref = document.getElementById('savedServicePref').value;
+            const allergyPref = document.getElementById('savedAllergy').value;
+            
+            document.querySelectorAll('.pref-checkbox').forEach(cb => {
+                if (foodPref && foodPref.includes(cb.value)) cb.checked = true;
+                if (roomPref && roomPref.includes(cb.value)) cb.checked = true;
+                if (servicePref && servicePref.includes(cb.value)) cb.checked = true;
+                if (allergyPref && allergyPref.includes(cb.value)) cb.checked = true;
+            });
+            
+            // Trigger change event to show/hide fee warning
+            document.querySelectorAll('.fee-trigger').forEach(cb => {
+                cb.dispatchEvent(new Event('change'));
+            });
+        }
+
+        function useSavedProfile() {
+            fillSavedPreferences();
+            
+            // Auto-check the consent checkbox since they are explicitly reusing their profile for this booking
+            document.getElementById('ConsentToShareWithHotel').checked = true;
+            
+            // Highlight card
+            document.getElementById('savedProfileCard').className = "alert alert-success mb-4 fade-up border-2 border-success";
+            
+            // Auto submit
+            var form = document.getElementById('preferenceForm');
+            // Trigger submit event listener to populate raw text
+            form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+            form.submit();
+        }
+
+        function editSavedProfile() {
+            fillSavedPreferences();
+            document.getElementById('savedProfileCard').style.display = 'none';
+            document.getElementById('freeText').focus();
+            
+            // Check the consent checkbox as a convenience
+            document.getElementById('ConsentToShareWithHotel').checked = true;
+            
+            // Optional: Scroll to the first section
+            window.scrollTo({ top: 300, behavior: 'smooth' });
+        }
+
+        function ignoreSavedProfile() {
+            document.getElementById('savedProfileCard').style.display = 'none';
+        }
 
         // Show fee warning if extra services are selected
         const feeTriggers = document.querySelectorAll('.fee-trigger');
